@@ -26,6 +26,10 @@ require("./configs/MongoDbConfig");
 const authRoutes = require("./routes/auth.route");
 app.use("/api", authRoutes);
 
+// User Route
+const userRoutes = require("./routes/user.route");
+app.use("/api", userRoutes);
+
 // Test Route
 app.get("/", (req, res) => {
   res.send("Hello World");

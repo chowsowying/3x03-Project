@@ -34,3 +34,16 @@ exports.currentUser = async (req, res) => {
     res.status(500).json({ message: error.message, success: false });
   }
 };
+
+// Function to retrieve a list of all users
+exports.listAllUsers = async (req, res) => {
+  try {
+    // Find all users
+    const users = await User.find({});
+
+    // Send the list of users as a JSON response
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+};
