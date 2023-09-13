@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { useSelector } from "react-redux";
+import { listAllUsers } from "../../api/all-users";
 
 const AdminDashboard = () => {
-  const [users, setUsers] = useState([]);
+  const { user } = useSelector((state) => ({...state}));
+  const [users, setAllUsers] = useState([]);
 
   useEffect(() => {
     // Fetch data from the backend endpoint for all users
-    fetch("/api/all-users")
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data);
+    listAllUsers(user.token)
+      .then((res) => {
+        setAllUsers(res.data);
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+      .catch((err) => console.log(err));
   }, []);
 
   return (
