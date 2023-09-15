@@ -1,3 +1,31 @@
 .container-height {
   height: calc(100vh - 60px); /* Adjust for the 60px navbar height */
 }
+
+.ant-menu {
+  background-color: #2f294c;
+  color: #fff;
+  font-size: 18px;
+  padding-right: 10px !important;
+  padding-left: 10px !important;
+}
+
+.ant-menu-item {
+  margin-top: 10px !important;
+  @media (max-width: 576px) {
+    padding: 10px !important;
+  }
+}
+
+.ant-menu-item-icon {
+  font-size: 18px !important;
+}
+
+.ant-menu-item-selected {
+  background-color: #625b84 !important;
+}
+
+a {
+  color: #000;
+  text-decoration: none;
+}

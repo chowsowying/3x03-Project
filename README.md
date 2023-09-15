@@ -13,21 +13,14 @@
 
 1. cd backend
 2. npm i
-3. Developmet - nodemon index.js <--------> Production - node index.js
+3. nodemon index.js or node index.js
 
 **Account**
 
-Use must use a valid email address to get registration link to register an account. Alternately you can use google login
-
 User Account
-sow99dev@gmail.com
+felix@email.com
 123456aA
 
 Admin Account
-chowsowying101@gmail.com
+john@gemail.com
 123456aA
-
-**What is done so far**
-
-I have setup the authentication with firebase auth with 2 kind of access control: user and admin.
-The database does not store user password as firebase will handle that.

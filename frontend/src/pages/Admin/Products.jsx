@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Sidebar from "../../components/Sidebar";
 
-const AdminDashboard = () => {
+const Products = () => {
   return (
     <Container fluid>
       <Row>
@@ -12,11 +12,11 @@ const AdminDashboard = () => {
           <Sidebar />
         </Col>
         <Col lg={10} md={8} xs={10} className="bg-light p-4 overflow-auto container-height ">
-          <h1>Admin Dashboard</h1>
+          <h1>Products</h1>
         </Col>
       </Row>
     </Container>
   );
 };
 
-export default AdminDashboard;
+export default Products;

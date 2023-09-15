@@ -6,23 +6,22 @@ import Loading from "../Loading";
 
 const UserRoute = () => {
   // States
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   // Declare variables
-  const { user } = useSelector((state) => ({ ...state }));
+  const { user } = useSelector((state) => state.user);
   const isToastDisplayedRef = useRef(false);
 
-  // useEffect
   useEffect(() => {
     setTimeout(() => {
-      setIsLoading(false);
+      setLoading(false);
     }, 1000);
   }, []);
 
-  // Handle loading
-  if (isLoading) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
 
-  // Handle user not logged in
   if (!user || !user.token) {
     if (!isToastDisplayedRef.current) {
       toast.error("Please login to continue");
@@ -30,6 +29,7 @@ const UserRoute = () => {
     }
     return <Navigate to="/login" />;
   }
+
   return <Outlet />;
 };
 
