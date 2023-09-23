@@ -41,3 +41,26 @@ exports.isAdmin = async (req, res, next) => {
     res.status(500).json({ message: error.message, success: false });
   }
 };
+
+// Middleware to check if the logged-in user is an user
+exports.isUser = async (req, res, next) => {
+  try {
+    // Get userId from authCheck middleware
+    const userId = req.userId;
+
+    // Find user in database
+    const user = await User.findById({ _id: userId }).exec();
+
+    // If user is not admin, send error
+    if (user.role !== "user") {
+      res.status(403).json({ err: "User resource. Access denied." });
+    } else {
+      // Execute next middleware
+      next();
+    }
+  } catch (error) {
+    // Handle the error
+    console.error(error);
+    res.status(500).json({ message: error.message, success: false });
+  }
+};

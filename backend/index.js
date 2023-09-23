@@ -30,6 +30,10 @@ app.use("/api", authRoutes);
 const userRoutes = require("./routes/user.route");
 app.use("/api", userRoutes);
 
+// Product Routes
+const productRoutes = require("./routes/product.route");
+app.use("/api", productRoutes);
+
 // Test Route
 app.get("/", (req, res) => {
   res.send("Hello World");

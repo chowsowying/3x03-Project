@@ -21,8 +21,8 @@ const Header = () => {
     navigate("/login");
   };
   return (
-    <Navbar collapseOnSelect expand="lg" className="bg-white px-4">
-      <Container fluid className="">
+    <Navbar collapseOnSelect expand="lg" className="bg-white px-4 border-bottom">
+      <Container fluid>
         <Navbar.Brand href="/">Ecommerce XX</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
@@ -32,12 +32,25 @@ const Header = () => {
             </Nav>
           )}
           {user && user.role === "admin" && (
-            <Nav className="ms-auto">
-              <NavDropdown title={user.name && user.name} id="collasible-nav-dropdown">
-                <NavDropdown.Item href="/admin/dashboard">Admin Dashboard</NavDropdown.Item>
-                <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
+            <>
+              <Nav.Link href="/admin/dashboard" className="pe-4">
+                Overview
+              </Nav.Link>
+              <Nav.Link href="/admin/users" className="pe-4">
+                Users
+              </Nav.Link>
+              <Nav.Link href="/admin/orders" className="pe-4">
+                Orders
+              </Nav.Link>
+              <Nav.Link href="/admin/products" className="pe-4">
+                Products
+              </Nav.Link>
+              <Nav className="ms-auto">
+                <NavDropdown title={user.name && user.name} id="collasible-nav-dropdown">
+                  <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            </>
           )}
           {user && user.role === "user" && (
             <Nav className="ms-auto">

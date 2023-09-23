@@ -30,8 +30,9 @@ const Login = () => {
       toast.success(response.data.message);
       // Update redux
       dispatch(setUser(user));
-      // Redirect
-      navigate("/");
+      // Redirect if user is admin or user
+      if (user.role === "admin") navigate("/admin/dashboard");
+      else navigate("/");
     } catch (error) {
       dispatch(setLoading(false));
       toast.error(error.response.data.message);
@@ -39,9 +40,9 @@ const Login = () => {
   };
 
   // If user is logged in, prevent user from accessing login page
-  useEffect(() => {
-    if (user && user.token) navigate("/");
-  }, [user]);
+  // useEffect(() => {
+  //   if (user && user.token) navigate("/");
+  // }, [user]);
 
   return (
     <Container className="mt-5">

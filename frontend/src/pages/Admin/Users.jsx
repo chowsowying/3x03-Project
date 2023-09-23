@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Table } from "react-bootstrap";
-import Sidebar from "../../components/Sidebar";
 import { GetAllUsers } from "../../api/userAPI";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -38,10 +37,7 @@ const Users = () => {
   return (
     <Container fluid>
       <Row>
-        <Col lg={2} md={4} xs={2} className="m-0 p-0">
-          <Sidebar />
-        </Col>
-        <Col lg={10} md={8} xs={10} className="bg-light p-4 overflow-auto container-height ">
+        <Col lg={12} className="bg-light p-4 overflow-auto container-height ">
           <h1 className="mb-4">All Users</h1>
           <Table striped bordered hover responsive>
             <thead>

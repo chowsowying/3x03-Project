@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 // Middlewares
-const { isAuth, isAdmin } = require("../middlewares/auth.middleware");
+const { isAuth, isAdmin, isUser } = require("../middlewares/auth.middleware");
 // Controllers
 const { register, login, currentUser } = require("../controllers/auth.controller");
 
@@ -16,7 +16,7 @@ router.post("/register", register);
 // Login user
 router.post("/login", login);
 // Get current user info
-router.post("/current-user", isAuth, currentUser);
+router.post("/current-user", isAuth, isUser, currentUser);
 // Get current admin info
 router.post("/current-admin", isAuth, isAdmin, currentUser);
 

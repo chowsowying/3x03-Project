@@ -15,6 +15,8 @@ import UserDashboard from "./pages/User/UserDashboard";
 import Orders from "./pages/Admin/UserOrders";
 import Products from "./pages/Admin/Products";
 import Users from "./pages/Admin/Users";
+import CreateProduct from "./pages/Admin/CreateProduct";
+import UpdateProduct from "./pages/Admin/UpdateProduct";
 
 // Components
 import Header from "./components/Header";
@@ -55,6 +57,8 @@ function App() {
           <Route path="/admin/orders" element={<Orders />} />
           <Route path="/admin/products" element={<Products />} />
           <Route path="/admin/users" element={<Users />} />
+          <Route path="/admin/create-product" element={<CreateProduct />} />
+          <Route path="/admin/update-product/:slug" element={<UpdateProduct />} />
         </Route>
       </Routes>
     </>
