@@ -1,0 +1,46 @@
+pipeline {
+    agent any  // You can specify a specific agent or label if needed
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the source code from your GitHub repository
+                script {
+                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/yourusername/your-repo.git']]])
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Example: Build your project using a build tool (e.g., Maven, Gradle)
+                sh 'your_build_command'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Example: Run tests on your project
+                sh 'your_test_command'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Example: Deploy your application or artifacts to a server or platform
+                sh 'your_deploy_command'
+            }
+        }
+    }
+
+    post {
+        success {
+            // Actions to perform when the pipeline is successful
+            // Example: Send notifications, archive artifacts, etc.
+        }
+        failure {
+            // Actions to perform when the pipeline fails
+            // Example: Send notifications, collect additional information, etc.
+        }
+    }
+}
