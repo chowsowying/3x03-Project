@@ -32,6 +32,7 @@ const Login = () => {
       dispatch(setUser(user));
       // Redirect if user is admin or user
       if (user.role === "admin") navigate("/admin/dashboard");
+      else if (user.role === "user") navigate("/user/dashboard")
       else navigate("/");
     } catch (error) {
       dispatch(setLoading(false));

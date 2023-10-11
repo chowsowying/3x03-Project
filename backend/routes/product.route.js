@@ -3,6 +3,7 @@ const router = express.Router();
 
 // Middlewares
 const { isAuth, isAdmin } = require("../middlewares/auth.middleware");
+const { isAuth, isUser } = require("../middlewares/auth.middleware");
 
 //controllers
 const {

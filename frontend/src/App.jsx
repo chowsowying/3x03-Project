@@ -13,6 +13,7 @@ import Register from "./pages/Register";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import UserDashboard from "./pages/User/UserDashboard";
 import Orders from "./pages/Admin/UserOrders";
+import ViewProduct from "./pages/User/ViewProduct"
 import Products from "./pages/Admin/Products";
 import Users from "./pages/Admin/Users";
 import CreateProduct from "./pages/Admin/CreateProduct";
@@ -52,6 +53,7 @@ function App() {
         <Route element={<UserRoute />}>
           <Route path="/user/dashboard" element={<UserDashboard />} />
           <Route path="/user/profile" element={<UserProfile />} />
+          <Route path="/user/view-product/:slug" element={<ViewProduct />} />
         </Route>
         {/* Admin Protected Routes */}
         <Route element={<AdminRoute />}>

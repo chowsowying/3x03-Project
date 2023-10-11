@@ -53,14 +53,21 @@ const Header = () => {
             </>
           )}
           {user && user.role === "user" && (
-            <Nav className="ms-auto">
-              <Nav.Link href="/cart">Cart</Nav.Link>
-              <NavDropdown title={user.name && user.name} id="collasible-nav-dropdown">
-                <NavDropdown.Item href="/user/dashboard">User Dashboard</NavDropdown.Item>
-                <NavDropdown.Item href="/user/profile">User Profile</NavDropdown.Item>
-                <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
+            <>
+              <Nav.Link href="/user/dashboard" className="pe-4">
+                Overview
+              </Nav.Link>
+              <Nav className="ms-auto">
+                <Nav.Link href="/cart">
+                  Cart
+                </Nav.Link>
+                <NavDropdown title={user.name && user.name} id="collasible-nav-dropdown">
+                  <NavDropdown.Item href="/user/dashboard">User Dashboard</NavDropdown.Item>
+                  <NavDropdown.Item href="/user/profile">User Profile</NavDropdown.Item>
+                  <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            </>
           )}
         </Navbar.Collapse>
       </Container>
