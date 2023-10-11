@@ -21,7 +21,7 @@ const Header = () => {
     navigate("/login");
   };
   return (
-    <Navbar collapseOnSelect expand="lg" className="bg-white px-4 border-bottom">
+    <Navbar collapseOnSelect expand="lg" className="bg-white px-3 border-bottom">
       <Container fluid>
         <Navbar.Brand href="/">Ecommerce XX</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -57,6 +57,7 @@ const Header = () => {
               <Nav.Link href="/cart">Cart</Nav.Link>
               <NavDropdown title={user.name && user.name} id="collasible-nav-dropdown">
                 <NavDropdown.Item href="/user/dashboard">User Dashboard</NavDropdown.Item>
+                <NavDropdown.Item href="/user/profile">User Profile</NavDropdown.Item>
                 <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
               </NavDropdown>
             </Nav>

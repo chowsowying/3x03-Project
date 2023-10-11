@@ -17,6 +17,7 @@ import Products from "./pages/Admin/Products";
 import Users from "./pages/Admin/Users";
 import CreateProduct from "./pages/Admin/CreateProduct";
 import UpdateProduct from "./pages/Admin/UpdateProduct";
+import UserProfile from "./pages/User/UserProfile";
 
 // Components
 import Header from "./components/Header";
@@ -50,6 +51,7 @@ function App() {
         {/* User Protected Routes */}
         <Route element={<UserRoute />}>
           <Route path="/user/dashboard" element={<UserDashboard />} />
+          <Route path="/user/profile" element={<UserProfile />} />
         </Route>
         {/* Admin Protected Routes */}
         <Route element={<AdminRoute />}>

@@ -5,10 +5,10 @@ import Col from "react-bootstrap/Col";
 
 const UserDashboard = () => {
   return (
-    <Container className="mt-5">
+    <Container fluid>
       <Row>
-        <Col>
-          <h1 className="text-center">UserDashboard</h1>
+        <Col lg={12} className="p-4 overflow-auto container-height">
+          <h1>User Dashboard</h1>
         </Col>
       </Row>
     </Container>
