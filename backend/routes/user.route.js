@@ -10,6 +10,8 @@ const {
   emptyUserCart,
   saveAddress,
   getAddress,
+  createPaymentIntent,
+  createOrder,
 } = require("../controllers/user.controller");
 
 //NOTE: Use isAuth is user is required to be authenticated to perform action (e.g. update address)
@@ -21,6 +23,7 @@ const {
 // Get All Users
 router.get("/all-users", isAuth, isAdmin, allUsers);
 
+//------------User Cart------------------------------------------------
 // Save User cart
 router.post("/user/cart", isAuth, isUser, userCart);
 // Get User cart
@@ -31,5 +34,13 @@ router.delete("/user/cart", isAuth, isUser, emptyUserCart);
 router.post("/user/address", isAuth, isUser, saveAddress);
 // Get address
 router.get("/user/address", isAuth, isUser, getAddress);
+
+//------------Payment------------------------------------------------
+// Stripe
+router.post("/create-payment-intent", isAuth, createPaymentIntent);
+
+//------------Orders------------------------------------------------------
+// Create Order
+router.post("/user/order", isAuth, createOrder);
 
 module.exports = router;

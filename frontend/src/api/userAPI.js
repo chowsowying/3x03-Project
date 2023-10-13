@@ -37,3 +37,15 @@ export const getAddress = async (authtoken) => {
   const headers = { authtoken };
   return await axios.get(url, { headers });
 };
+
+export const createPaymentIntent = async (authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/create-payment-intent`;
+  const headers = { authtoken };
+  return await axios.post(url, {}, { headers });
+};
+
+export const createOrder = async (stripeResponse, authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/user/order`;
+  const headers = { authtoken };
+  return await axios.post(url, { stripeResponse }, { headers });
+};

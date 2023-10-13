@@ -96,9 +96,16 @@ const ViewProduct = () => {
             </ListGroup.Item>
           </ListGroup>
           <div className="d-flex justify-content-between align-items-center mt-4">
-            <a className="btn btn-primary" onClick={handleAddToCart}>
-              Add to Cart
-            </a>
+            {/* Disabled if quantity is 0 */}
+            {product.quantity > 0 ? (
+              <button onClick={handleAddToCart} className="btn btn-primary">
+                Add to Cart
+              </button>
+            ) : (
+              <button disabled className="btn btn-dark">
+                Out of Stock
+              </button>
+            )}
           </div>
         </Col>
       </Row>

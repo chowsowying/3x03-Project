@@ -1,6 +1,8 @@
 const User = require("../models/user.model");
 const Cart = require("../models/cart.model");
 const Product = require("../models/product.model");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const Order = require("../models/order.model");
 
 // Function to get current user
 exports.allUsers = async (req, res) => {
@@ -119,6 +121,64 @@ exports.getAddress = async (req, res) => {
     const user = await User.findById({ _id: req.userId }).select("-password");
     // Send response
     res.status(200).json(user.address);
+  } catch (error) {
+    // Send error response
+    res.status(400).json({ message: error.message, success: false });
+  }
+};
+
+exports.createPaymentIntent = async (req, res) => {
+  // 1 find user
+  const user = await User.findOne({ _id: req.userId }).exec();
+  // 2 get user cart total
+  const { cartTotal } = await Cart.findOne({ orderedBy: user._id }).exec();
+
+  console.log("CART TOTAL CHARGED", cartTotal);
+
+  let finalAmount = cartTotal * 100;
+
+  // create payment intent with order amount and currency
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: finalAmount,
+    currency: "sgd",
+  });
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+    cartTotal,
+    payable: finalAmount,
+  });
+};
+
+exports.createOrder = async (req, res) => {
+  try {
+    // Get payment intent from request body
+    const { paymentIntent } = req.body.stripeResponse;
+    // Find user
+    const user = await User.findOne({ _id: req.userId }).exec();
+    // Find cart by user id
+    const { products } = await Cart.findOne({ orderedBy: user._id }).exec();
+    // Create new order
+    let newOrder = await new Order({
+      products,
+      paymentIntent,
+      orderedBy: user._id,
+    }).save();
+
+    // Decrement quantity, increment sold
+    let bulkOption = products.map((item) => {
+      return {
+        updateOne: {
+          filter: { _id: item.product._id },
+          update: { $inc: { quantity: -item.count, sold: +item.count } },
+        },
+      };
+    });
+    // Update products
+    await Product.bulkWrite(bulkOption, {});
+
+    // Send response
+    res.status(200).json({ ok: true });
   } catch (error) {
     // Send error response
     res.status(400).json({ message: error.message, success: false });

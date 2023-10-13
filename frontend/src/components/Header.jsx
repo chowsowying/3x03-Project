@@ -64,7 +64,7 @@ const Header = () => {
               <Nav className="ms-auto">
                 <Nav.Link href="/cart">
                   Cart
-                  <span class=" ms-2 badge rounded-pill bg-danger">
+                  <span className=" ms-2 badge rounded-pill bg-danger">
                     {cart.length && cart.length}
                   </span>
                 </Nav.Link>
