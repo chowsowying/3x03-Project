@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { addToCart } from "../redux/cartSlice";
 import { toast } from "react-toastify";
+import { userCart } from "../api/userAPI";
+import { setLoading } from "../redux/loaderSlice";
 
 const Cart = () => {
   const { user } = useSelector((state) => state.user);
@@ -14,7 +16,20 @@ const Cart = () => {
   const dispatch = useDispatch();
 
   //Fucntion: Save cart to database
-  const handleSaveCartToDatabase = () => {};
+  const handleSaveCartToDatabase = () => {
+    dispatch(setLoading(true));
+    userCart(cart, user.token)
+      .then((res) => {
+        if (res.data.ok) {
+          dispatch(setLoading(false));
+          navigate("/checkout");
+        }
+      })
+      .catch((err) => {
+        dispatch(setLoading(false));
+        toast.error(err.response.data.message);
+      });
+  };
 
   //Fucntion: Remove from cart
   const handleCartRemove = (productId) => {
@@ -30,6 +45,9 @@ const Cart = () => {
 
       // Save the updated cart to Redux
       dispatch(addToCart(updatedCart));
+
+      // Show toast
+      toast.error("Product removed from cart");
     }
   };
 

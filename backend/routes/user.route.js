@@ -8,6 +8,8 @@ const {
   userCart,
   getUserCart,
   emptyUserCart,
+  saveAddress,
+  getAddress,
 } = require("../controllers/user.controller");
 
 //NOTE: Use isAuth is user is required to be authenticated to perform action (e.g. update address)
@@ -25,5 +27,9 @@ router.post("/user/cart", isAuth, isUser, userCart);
 router.get("/user/cart", isAuth, isUser, getUserCart);
 // Empty User cart
 router.delete("/user/cart", isAuth, isUser, emptyUserCart);
+// Save address
+router.post("/user/address", isAuth, isUser, saveAddress);
+// Get address
+router.get("/user/address", isAuth, isUser, getAddress);
 
 module.exports = router;

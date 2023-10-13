@@ -23,7 +23,7 @@ exports.userCart = async (req, res) => {
     const { cart } = req.body;
 
     // Find user by id
-    const user = await User.findOne({ email: req.user.email }).exec();
+    const user = await User.findById({ _id: req.userId }).select("-password");
 
     // Check if cart with logged in user id already exist
     let userCartExist = await Cart.findOne({ orderedBy: user._id }).exec();
@@ -65,7 +65,7 @@ exports.userCart = async (req, res) => {
 exports.getUserCart = async (req, res) => {
   try {
     //Find user
-    const user = await User.findOne({ email: req.user.email }).exec();
+    const user = await User.findById({ _id: req.userId }).select("-password");
     // Find cart by user id
     let cart = await Cart.findOne({ orderedBy: user._id })
       .populate("products.product", "_id title price")
@@ -83,7 +83,7 @@ exports.getUserCart = async (req, res) => {
 exports.emptyUserCart = async (req, res) => {
   try {
     // Find user
-    const user = await User.findOne({ email: req.user.email }).exec();
+    const user = await User.findById({ _id: req.userId }).select("-password");
     // Delete Cart
     const cart = await Cart.findOneAndDelete({ orderedBy: user._id }).exec();
     // Send response
@@ -92,6 +92,33 @@ exports.emptyUserCart = async (req, res) => {
       success: true,
       data: cart,
     });
+  } catch (error) {
+    // Send error response
+    res.status(400).json({ message: error.message, success: false });
+  }
+};
+
+exports.saveAddress = async (req, res) => {
+  try {
+    // Find user and update address
+    const userAddress = await User.findOneAndUpdate(
+      { _id: req.userId },
+      { address: req.body.address }
+    ).exec();
+    // Send response
+    res.status(200).json({ ok: true });
+  } catch (error) {
+    // Send error response
+    res.status(400).json({ message: error.message, success: false });
+  }
+};
+
+exports.getAddress = async (req, res) => {
+  try {
+    // Find user
+    const user = await User.findById({ _id: req.userId }).select("-password");
+    // Send response
+    res.status(200).json(user.address);
   } catch (error) {
     // Send error response
     res.status(400).json({ message: error.message, success: false });

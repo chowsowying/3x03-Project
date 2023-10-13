@@ -25,3 +25,15 @@ export const emptyUserCart = async (authtoken) => {
   const headers = { authtoken };
   return await axios.delete(url, { headers });
 };
+
+export const saveUserAddress = async (address, authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/user/address`;
+  const headers = { authtoken };
+  return await axios.post(url, { address }, { headers });
+};
+
+export const getAddress = async (authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/user/address`;
+  const headers = { authtoken };
+  return await axios.get(url, { headers });
+};
