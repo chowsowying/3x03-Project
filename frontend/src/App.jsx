@@ -19,6 +19,7 @@ import Users from "./pages/Admin/Users";
 import CreateProduct from "./pages/Admin/CreateProduct";
 import UpdateProduct from "./pages/Admin/UpdateProduct";
 import UserProfile from "./pages/User/UserProfile";
+import UpdateProfile from "./pages/User/UpdateProfile";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Payment from "./pages/Payment";
@@ -59,6 +60,7 @@ function App() {
         <Route element={<UserRoute />}>
           <Route path="/user/dashboard" element={<UserDashboard />} />
           <Route path="/user/profile" element={<UserProfile />} />
+          <Route path="/user/update-profile" element={<UpdateProfile />} />
           <Route path="/user/view-product/:slug" element={<ViewProduct />} />
         </Route>
         {/* Admin Protected Routes */}

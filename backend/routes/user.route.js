@@ -5,6 +5,7 @@ const { isAuth, isAdmin, isUser } = require("../middlewares/auth.middleware");
 // Controllers
 const {
   allUsers,
+  currentUser,
   userCart,
   getUserCart,
   emptyUserCart,
@@ -22,6 +23,8 @@ const {
 
 // Get All Users
 router.get("/all-users", isAuth, isAdmin, allUsers);
+// Get User
+router.get("/user/profile-page", isAuth, isUser, currentUser);
 
 //------------User Cart------------------------------------------------
 // Save User cart

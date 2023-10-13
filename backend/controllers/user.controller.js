@@ -14,6 +14,15 @@ exports.allUsers = async (req, res) => {
   }
 };
 
+exports.currentUser = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.userId }).select("-password");
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+};
+
 // Function to create user cart (User will only have one cart at a time)
 exports.userCart = async (req, res) => {
   try {

@@ -8,6 +8,12 @@ export const GetAllUsers = async (authtoken) => {
   return await axios.get(url, { headers });
 };
 
+export const GetSingleUser = async (authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/user/profile-page`;
+  const headers = { authtoken };
+  return await axios.get(url, { headers });
+};
+
 export const userCart = async (cart, authtoken) => {
   const url = `${import.meta.env.VITE_APP_API}/user/cart`;
   const headers = { authtoken };
