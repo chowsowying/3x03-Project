@@ -1,3 +1,10 @@
 .container-height {
   height: calc(100vh - 60px); /* Adjust for the 60px navbar height */
 }
+
+.cart-image-container {
+  width: 100px; /* Set your desired width */
+  height: 100px; /* Set your desired height */
+  border: 1px solid #ccc; /* Optional border styling */
+  overflow: hidden; /* Ensure the image doesn't exceed the container */
+}

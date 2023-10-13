@@ -13,12 +13,13 @@ import Register from "./pages/Register";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import UserDashboard from "./pages/User/UserDashboard";
 import Orders from "./pages/Admin/UserOrders";
-import ViewProduct from "./pages/User/ViewProduct"
+import ViewProduct from "./pages/User/ViewProduct";
 import Products from "./pages/Admin/Products";
 import Users from "./pages/Admin/Users";
 import CreateProduct from "./pages/Admin/CreateProduct";
 import UpdateProduct from "./pages/Admin/UpdateProduct";
 import UserProfile from "./pages/User/UserProfile";
+import Cart from "./pages/Cart";
 
 // Components
 import Header from "./components/Header";
@@ -49,6 +50,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/cart" element={<Cart />} />
         {/* User Protected Routes */}
         <Route element={<UserRoute />}>
           <Route path="/user/dashboard" element={<UserDashboard />} />

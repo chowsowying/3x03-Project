@@ -5,25 +5,29 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../redux/userSlice";
+import { addToCart } from "../redux/cartSlice";
 
 const Header = () => {
   // Declare variables
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
+  const cart = useSelector((state) => state.cart);
   const handleLogout = () => {
     //clear local storage
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("cart");
     //clear redux
     dispatch(setUser(null));
+    dispatch(addToCart([]));
     //redirect
     navigate("/login");
   };
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-white px-3 border-bottom">
       <Container fluid>
-        <Navbar.Brand href="/">Ecommerce XX</Navbar.Brand>
+        <Navbar.Brand href="/">MakaBaka</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           {!user && (
@@ -60,6 +64,9 @@ const Header = () => {
               <Nav className="ms-auto">
                 <Nav.Link href="/cart">
                   Cart
+                  <span class=" ms-2 badge rounded-pill bg-danger">
+                    {cart.length && cart.length}
+                  </span>
                 </Nav.Link>
                 <NavDropdown title={user.name && user.name} id="collasible-nav-dropdown">
                   <NavDropdown.Item href="/user/dashboard">User Dashboard</NavDropdown.Item>

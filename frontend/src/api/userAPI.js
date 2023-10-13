@@ -7,3 +7,21 @@ export const GetAllUsers = async (authtoken) => {
   const headers = { authtoken };
   return await axios.get(url, { headers });
 };
+
+export const userCart = async (cart, authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/user/cart`;
+  const headers = { authtoken };
+  return await axios.post(url, { cart }, { headers });
+};
+
+export const getUserCart = async (authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/user/cart`;
+  const headers = { authtoken };
+  return await axios.get(url, { headers });
+};
+
+export const emptyUserCart = async (authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/user/cart`;
+  const headers = { authtoken };
+  return await axios.delete(url, { headers });
+};
