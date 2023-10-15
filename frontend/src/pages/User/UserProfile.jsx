@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Button from 'react-bootstrap/Button';
+import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -34,14 +34,16 @@ const UserProfile = () => {
       <Row>
         <Col lg={12} className="p-4 overflow-auto container-height">
           <h1 className="mb-4">User Profile</h1>
-          <div style={{ maxWidth: '600px' }}>
+          <div style={{ maxWidth: "600px" }}>
             <ListGroup>
-              <ListGroup.Item>Name: {user.name}</ListGroup.Item>
-              <ListGroup.Item>Email: {user.email}</ListGroup.Item>
-              <ListGroup.Item>Role: {user.role}</ListGroup.Item>
+              <ListGroup.Item>Name: {users.name}</ListGroup.Item>
+              <ListGroup.Item>Email: {users.email}</ListGroup.Item>
+              <ListGroup.Item>Role: {users.role}</ListGroup.Item>
             </ListGroup>
             <a href={`/user/update-profile`}>
-            <Button variant="primary" className="mt-3">Edit Profile</Button>
+              <Button variant="primary" className="mt-3">
+                Edit Profile
+              </Button>
             </a>
           </div>
         </Col>

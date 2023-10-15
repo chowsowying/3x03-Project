@@ -25,8 +25,8 @@ exports.currentUser = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-     // Request object
-    const userId = req.user._id;
+    // Request object
+    const userId = req.userId;
 
     const updatedFields = {
       name: req.body.name,
@@ -35,26 +35,30 @@ exports.updateProfile = async (req, res) => {
     };
 
     // Find and update the user by ID
-    const updatedUser = await User.findByIdAndUpdate(userId, { $set: updatedFields }, { new: true }).exec();
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updatedFields },
+      { new: true }
+    ).exec();
 
     if (!updatedUser) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
     res.status(200).json({
-      message: 'Profile updated successfully',
+      message: "Profile updated successfully",
       success: true,
       data: updatedUser,
     });
   } catch (error) {
-    if (error.name === 'ValidationError') {
+    if (error.name === "ValidationError") {
       // Validation error
       res.status(400).json({
-        message: 'Validation error: ' + error.message,
+        message: "Validation error: " + error.message,
         success: false,
       });
     } else {
       // Send a general error response
-      res.status(500).json({ message: 'Internal server error', success: false });
+      res.status(500).json({ message: "Internal server error", success: false });
     }
   }
 };
@@ -234,7 +238,7 @@ exports.createOrder = async (req, res) => {
 exports.getUserOrders = async (req, res) => {
   try {
     const orders = await Order.find({ orderedBy: req.userId })
-      .populate('products.product') // Populate the product details
+      .populate("products.product") // Populate the product details
       .exec();
     res.status(200).json(orders);
   } catch (error) {
