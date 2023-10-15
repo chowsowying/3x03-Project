@@ -27,7 +27,9 @@ const Header = () => {
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-white px-3 border-bottom">
       <Container fluid>
-        <Navbar.Brand href="/">ThirdLife</Navbar.Brand>
+        <Navbar.Brand href="/" className="fw-bold">
+          ThirdLife
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           {!user && (
@@ -58,12 +60,6 @@ const Header = () => {
           )}
           {user && user.role === "user" && (
             <>
-              <Nav.Link href="/user/dashboard" className="pe-4">
-                Overview
-              </Nav.Link>
-              <Nav.Link href="/user/my-orders" className="pe-4">
-                My Orders
-              </Nav.Link>
               <Nav className="ms-auto">
                 <Nav.Link href="/cart">
                   Cart
@@ -72,8 +68,8 @@ const Header = () => {
                   </span>
                 </Nav.Link>
                 <NavDropdown title={user.name && user.name} id="collasible-nav-dropdown">
-                  <NavDropdown.Item href="/user/dashboard">User Dashboard</NavDropdown.Item>
-                  <NavDropdown.Item href="/user/profile">User Profile</NavDropdown.Item>
+                  <NavDropdown.Item href="/user/my-orders">My Orders</NavDropdown.Item>
+                  <NavDropdown.Item href="/user/profile">My Profile</NavDropdown.Item>
                   <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
                 </NavDropdown>
               </Nav>

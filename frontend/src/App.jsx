@@ -11,7 +11,6 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
-import UserDashboard from "./pages/User/UserDashboard";
 import UserMyOrders from "./pages/User/UserMyOrders";
 import AllUserOrders from "./pages/Admin/AllUserOrders";
 import ViewProduct from "./pages/User/ViewProduct";
@@ -54,16 +53,18 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/cart" element={<Cart />} />
+        {/* <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/payment" element={<Payment />} />
+        <Route path="/payment" element={<Payment />} /> */}
         {/* User Protected Routes */}
         <Route element={<UserRoute />}>
-          <Route path="/user/dashboard" element={<UserDashboard />} />
           <Route path="/user/my-orders" element={<UserMyOrders />} />
           <Route path="/user/profile" element={<UserProfile />} />
           <Route path="/user/update-profile" element={<UpdateProfile />} />
           <Route path="/user/view-product/:slug" element={<ViewProduct />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/payment" element={<Payment />} />
         </Route>
         {/* Admin Protected Routes */}
         <Route element={<AdminRoute />}>

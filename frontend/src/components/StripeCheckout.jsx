@@ -102,7 +102,7 @@ const StripeCheckout = () => {
           <Row>
             <Col lg={12} className="p-4 overflow-auto container-height">
               <h1>Payment Success</h1>
-              <a href="/user/dashboard" className="btn btn-primary mt-3">
+              <a href="/user/my-orders" className="btn btn-primary mt-3">
                 See it in your purchase history
               </a>
             </Col>
