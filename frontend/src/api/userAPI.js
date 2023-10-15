@@ -14,6 +14,12 @@ export const GetSingleUser = async (authtoken) => {
   return await axios.get(url, { headers });
 };
 
+export const UpdateSingleProfile = async (user, authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/user/update-profile`;
+  const headers = { authtoken };
+  return await axios.put(url, user, { headers });
+};
+
 export const userCart = async (cart, authtoken) => {
   const url = `${import.meta.env.VITE_APP_API}/user/cart`;
   const headers = { authtoken };

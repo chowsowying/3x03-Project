@@ -23,6 +23,42 @@ exports.currentUser = async (req, res) => {
   }
 };
 
+exports.updateProfile = async (req, res) => {
+  try {
+     // Request object
+    const userId = req.user._id;
+
+    const updatedFields = {
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+    };
+
+    // Find and update the user by ID
+    const updatedUser = await User.findByIdAndUpdate(userId, { $set: updatedFields }, { new: true }).exec();
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json({
+      message: 'Profile updated successfully',
+      success: true,
+      data: updatedUser,
+    });
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      // Validation error
+      res.status(400).json({
+        message: 'Validation error: ' + error.message,
+        success: false,
+      });
+    } else {
+      // Send a general error response
+      res.status(500).json({ message: 'Internal server error', success: false });
+    }
+  }
+};
+
 // Function to create user cart (User will only have one cart at a time)
 exports.userCart = async (req, res) => {
   try {
