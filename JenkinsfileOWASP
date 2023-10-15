@@ -3,7 +3,7 @@ pipeline {
 	stages {
 		stage('Checkout SCM') {
 			steps {
-				git 'https://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@github.com/chowsowying/3x03-Project.git'
+				git branch: 'main', url: 'https://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@github.com/chowsowying/3x03-Project.git'
 			}
 		}
 
