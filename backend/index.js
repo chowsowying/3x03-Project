@@ -35,7 +35,7 @@ const productRoutes = require("./routes/product.route");
 app.use("/api", productRoutes);
 
 // User's Orders Routes
-const userOrderRoutes = require("./routes/user-orders.route");
+const userOrderRoutes = require("./routes/all-user-orders.route");
 app.use("/api", userOrderRoutes);
 
 // Test Route

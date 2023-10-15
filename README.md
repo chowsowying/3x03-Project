@@ -22,5 +22,5 @@ felix@email.com
 123456aA
 
 Admin Account
-john@gemail.com
+john@email.com
 123456aA

@@ -13,6 +13,7 @@ const {
   getAddress,
   createPaymentIntent,
   createOrder,
+  getUserOrders
 } = require("../controllers/user.controller");
 
 //NOTE: Use isAuth is user is required to be authenticated to perform action (e.g. update address)
@@ -45,5 +46,7 @@ router.post("/create-payment-intent", isAuth, createPaymentIntent);
 //------------Orders------------------------------------------------------
 // Create Order
 router.post("/user/order", isAuth, createOrder);
+// View all of user's own orders
+router.get("/user/my-orders", isAuth, isUser, getUserOrders);
 
 module.exports = router;

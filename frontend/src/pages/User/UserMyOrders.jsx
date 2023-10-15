@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { GetUserOrders, changeStatus } from "../../api/allUserOrdersAPI";
+import { GetUserOrders } from "../../api/userAPI";
 
 const UserOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -18,19 +18,7 @@ const UserOrders = () => {
     } catch (error) {
       toast.error(error.response.data.message);
     }
-  };
-
-  const handleStatusChange = (orderId, orderStatus) => {
-    changeStatus(orderId, orderStatus, user.token)
-      .then((res) => {
-        toast.success("Status updated successfully");
-        fetchUserOrders()
-      })
-      .catch((err) => {
-        setLoading(false);
-        toast.error(err.message);
-      });
-  };
+  };  
 
   useEffect(() => {
     fetchUserOrders();
@@ -40,16 +28,15 @@ const UserOrders = () => {
     <Container fluid>
       <Row>
         <Col lg={12} className="bg-light p-4 overflow-auto container-height">
-          <h2>All Orders</h2>
+          <h2>My Orders</h2>
           <table className="table table-bordered table-striped mt-4">
             <thead>
               <tr>
                 <th>Order ID</th>
                 <th>Amount</th>
                 <th>Ordered On</th>
-                <th>Order By</th>
                 <th>Status</th>
-                <th>Action</th>
+                <th>Order Details</th>
               </tr>
             </thead>
             <tbody>
@@ -59,19 +46,7 @@ const UserOrders = () => {
                     <td>{order._id}</td>
                     <td>${(order.paymentIntent.amount / 100).toFixed(2)}</td>
                     <td>{new Date(order.paymentIntent.created * 1000).toLocaleString()}</td>
-                    <td>{order.orderedBy.name}</td>
-                    <td>
-                      <select
-                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                        className="form-select"
-                        defaultValue={order.orderStatus}>
-                        <option value="Not Processed">Not Processed</option>
-                        <option value="Processing">Processing</option>
-                        <option value="Dispatched">Dispatched</option>
-                        <option value="Cancelled">Cancelled</option>
-                        <option value="Completed">Completed</option>
-                      </select>
-                    </td>
+                    <td>{order.orderStatus}</td>
                     <td>
                       <button
                         className="btn btn-primary"
@@ -87,7 +62,7 @@ const UserOrders = () => {
                   </tr>
                   {orderDetails[order._id] && (
                     <tr>
-                      <td colSpan="6">
+                      <td colSpan="5">
                         <div>
                           <table className="table table-bordered">
                             <thead className="thead-light">

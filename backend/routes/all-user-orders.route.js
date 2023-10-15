@@ -5,7 +5,7 @@ const router = express.Router();
 const { isAuth, isAdmin, isUser } = require("../middlewares/auth.middleware");
 
 // Controllers
-const { getAllOrders, orderStatus } = require("../controllers/user-orders.controller");
+const { getAllOrders, orderStatus } = require("../controllers/all-user-orders.controller");
 
 // Routes
 

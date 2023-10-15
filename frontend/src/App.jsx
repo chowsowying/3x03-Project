@@ -12,7 +12,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import UserDashboard from "./pages/User/UserDashboard";
-import Orders from "./pages/Admin/UserOrders";
+import UserMyOrders from "./pages/User/UserMyOrders";
+import AllUserOrders from "./pages/Admin/AllUserOrders";
 import ViewProduct from "./pages/User/ViewProduct";
 import Products from "./pages/Admin/Products";
 import Users from "./pages/Admin/Users";
@@ -59,6 +60,7 @@ function App() {
         {/* User Protected Routes */}
         <Route element={<UserRoute />}>
           <Route path="/user/dashboard" element={<UserDashboard />} />
+          <Route path="/user/my-orders" element={<UserMyOrders />} />
           <Route path="/user/profile" element={<UserProfile />} />
           <Route path="/user/update-profile" element={<UpdateProfile />} />
           <Route path="/user/view-product/:slug" element={<ViewProduct />} />
@@ -66,7 +68,7 @@ function App() {
         {/* Admin Protected Routes */}
         <Route element={<AdminRoute />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/orders" element={<Orders />} />
+          <Route path="/admin/orders" element={<AllUserOrders />} />
           <Route path="/admin/products" element={<Products />} />
           <Route path="/admin/users" element={<Users />} />
           <Route path="/admin/create-product" element={<CreateProduct />} />

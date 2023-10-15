@@ -55,3 +55,9 @@ export const createOrder = async (stripeResponse, authtoken) => {
   const headers = { authtoken };
   return await axios.post(url, { stripeResponse }, { headers });
 };
+
+export const GetUserOrders = async (authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/user/my-orders`;
+  const headers = { authtoken };
+  return await axios.get(url, { headers });
+};

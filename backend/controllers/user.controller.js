@@ -193,3 +193,15 @@ exports.createOrder = async (req, res) => {
     res.status(400).json({ message: error.message, success: false });
   }
 };
+
+// Fetch orders for a specific user
+exports.getUserOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ orderedBy: req.userId })
+      .populate('products.product') // Populate the product details
+      .exec();
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+};
