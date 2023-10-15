@@ -5,13 +5,16 @@ import Col from "react-bootstrap/Col";
 import { Button, Form } from "react-bootstrap/";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { UpdateSingleProfile} from "../../api/userAPI";
+import { UpdateSingleProfile, GetSingleUser } from "../../api/userAPI";
 import { setLoading } from "../../redux/loaderSlice";
 
 const UpdateProfile = () => {
+  const [users, setUser] = useState([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [reenteredPassword, setReenteredPassword] = useState("");
+  const [passwordMatchError, setPasswordMatchError] = useState("");
 
   const values = {
     name,
@@ -22,7 +25,16 @@ const UpdateProfile = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
 
-  //Function: Update Profile
+  useEffect(() => {
+    // Check if the passwords match when the user types
+    if (reenteredPassword !== password) {
+      setPasswordMatchError("Passwords do not match");
+    } else {
+      setPasswordMatchError("");
+    }
+  }, [password, reenteredPassword]);
+
+  // Function: Update Profile
   const handleClick = async (e) => {
     e.preventDefault();
     dispatch(setLoading(true));
@@ -36,34 +48,49 @@ const UpdateProfile = () => {
     }
   };
 
+  // Function: Get Single User
+  const fetchUser = async () => {
+    try {
+      const response = await GetSingleUser(user.token);
+      setUser(response.data);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  // UseEffect: Fetch Single User
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   return (
     <Container fluid>
       <Row>
         <Col lg={12} className="p-4 overflow-auto container-height">
           <h1 className="mb-4">Update Profile</h1>
-          <div style={{ maxWidth: '650px' }}>
+          <div style={{ maxWidth: "650px" }}>
             <Form>
               <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Name"
+                placeholder={users.name}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </Form>
-            <br/>
+            <br />
             <Form>
               <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control
                   type="email"
-                  placeholder="name@example.com"
+                  placeholder={users.email}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </Form.Group>
             </Form>
-            <Form.Label htmlFor="inputPassword5">Password</Form.Label>
+            <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
               id="inputPassword5"
@@ -71,11 +98,21 @@ const UpdateProfile = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <Form.Label>Re-enter Password</Form.Label>
+            <Form.Control
+              type="password"
+              id="reenteredPassword"
+              value={reenteredPassword}
+              onChange={(e) => setReenteredPassword(e.target.value)}
+            />
             <Form.Text id="passwordHelpBlock" muted>
               Your password must be 15-64 characters long, contains one special character, capital letter, and number.
             </Form.Text>
+            {passwordMatchError && <div className="text-danger">{passwordMatchError}</div>}
             <a>
-              <Button onClick={handleClick} variant="primary" className="mt-3">Update</Button>
+              <Button onClick={handleClick} variant="primary" className="mt-3" disabled={passwordMatchError !== ""}>
+                Update
+              </Button>
             </a>
           </div>
         </Col>
@@ -83,5 +120,5 @@ const UpdateProfile = () => {
     </Container>
   );
 };
-  
-  export default UpdateProfile;
+
+export default UpdateProfile;
