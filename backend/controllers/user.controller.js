@@ -3,6 +3,7 @@ const Cart = require("../models/cart.model");
 const Product = require("../models/product.model");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Order = require("../models/order.model");
+const Form = require("../models/form.model");
 
 // Function to get current user
 exports.allUsers = async (req, res) => {
@@ -60,6 +61,23 @@ exports.updateProfile = async (req, res) => {
       // Send a general error response
       res.status(500).json({ message: "Internal server error", success: false });
     }
+  }
+};
+
+// Function to create a form
+exports.contactAdmin = async (req, res) => {
+  try {
+    const newForm = await new Form(req.body).save();
+    // Send response
+    res.status(200).json({ 
+    message: "Form created successfully",
+    success: true,
+    form: newForm 
+    });
+
+  } catch (error) {
+    // Send a general error response
+    res.status(500).json({ error: "An error occurred while creating the form" });
   }
 };
 

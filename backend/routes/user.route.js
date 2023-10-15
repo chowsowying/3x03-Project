@@ -7,6 +7,7 @@ const {
   allUsers,
   currentUser,
   updateProfile,
+  contactAdmin,
   userCart,
   getUserCart,
   emptyUserCart,
@@ -29,6 +30,8 @@ router.get("/all-users", isAuth, isAdmin, allUsers);
 router.get("/user/profile-page", isAuth, isUser, currentUser);
 // Update User
 router.put("/user/update-profile", isAuth, isUser, updateProfile);
+// Create new form
+router.post("/user/contact-admin", isAuth, isUser, contactAdmin);
 
 //------------User Cart------------------------------------------------
 // Save User cart

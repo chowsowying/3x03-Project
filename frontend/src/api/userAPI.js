@@ -20,6 +20,12 @@ export const UpdateSingleProfile = async (user, authtoken) => {
   return await axios.put(url, user, { headers });
 };
 
+export const CreateNewForm = async (form, authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/user/contact-admin`;
+  const headers = { authtoken };
+  return await axios.post(url, form, { headers });
+};
+
 export const userCart = async (cart, authtoken) => {
   const url = `${import.meta.env.VITE_APP_API}/user/cart`;
   const headers = { authtoken };

@@ -20,6 +20,7 @@ import CreateProduct from "./pages/Admin/CreateProduct";
 import UpdateProduct from "./pages/Admin/UpdateProduct";
 import UserProfile from "./pages/User/UserProfile";
 import UpdateProfile from "./pages/User/UpdateProfile";
+import ContactAdmin from "./pages/User/ContactAdmin";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Payment from "./pages/Payment";
@@ -27,6 +28,7 @@ import Payment from "./pages/Payment";
 // Components
 import Header from "./components/Header";
 import Loading from "./components/Loading";
+import Footer from "./components/Footer";
 import AdminRoute from "./components/routes/AdminRoute";
 import UserRoute from "./components/routes/UserRoute";
 
@@ -62,6 +64,7 @@ function App() {
           <Route path="/user/profile" element={<UserProfile />} />
           <Route path="/user/update-profile" element={<UpdateProfile />} />
           <Route path="/user/view-product/:slug" element={<ViewProduct />} />
+          <Route path="/user/contact-admin" element={<ContactAdmin />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment" element={<Payment />} />
@@ -76,6 +79,7 @@ function App() {
           <Route path="/admin/update-product/:slug" element={<UpdateProduct />} />
         </Route>
       </Routes>
+      <Footer />
     </>
   );
 }
