@@ -3,7 +3,7 @@ pipeline {
 	stages {
 		stage('Checkout SCM') {
 			steps {
-				git '/chowsowying/3x03-Project.git'
+				git 'https://github.com/chowsowying/3x03-Project.git'
 			}
 		}
 
