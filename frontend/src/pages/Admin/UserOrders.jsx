@@ -4,11 +4,12 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { GetUserOrders } from "../../api/allUserOrdersAPI";
+import { GetUserOrders, changeStatus } from "../../api/allUserOrdersAPI";
 
 const UserOrders = () => {
   const [orders, setOrders] = useState([]);
   const { user } = useSelector((state) => state.user);
+  const [orderDetails, setOrderDetails] = useState({});
 
   const fetchUserOrders = async () => {
     try {
@@ -19,6 +20,18 @@ const UserOrders = () => {
     }
   };
 
+  const handleStatusChange = (orderId, orderStatus) => {
+    changeStatus(orderId, orderStatus, user.token)
+      .then((res) => {
+        toast.success("Status updated successfully");
+        fetchUserOrders()
+      })
+      .catch((err) => {
+        setLoading(false);
+        toast.error(err.message);
+      });
+  };
+
   useEffect(() => {
     fetchUserOrders();
   }, []);
@@ -27,24 +40,79 @@ const UserOrders = () => {
     <Container fluid>
       <Row>
         <Col lg={12} className="bg-light p-4 overflow-auto container-height">
-          <h1>User Orders</h1>
-          {orders.map((order) => (
-            <div key={order._id}>
-              <h4>Order ID: {order._id}</h4>
-              <p>Order Status: {order.orderStatus}</p>
-              <p>Payment Status: {order.paymentIntent.status}</p>
-              <p>Ordered Products:</p>
-              <ul>
-                {order.products.map((product) => (
-                  <li key={order._id + "-" + product.product._id}>
-                    Product ID: {product.product._id} | Product Name: {product.product.title} | Quantity: {product.count}
-                  </li>
-                ))}
-              </ul>
-              <p>Order Date: {new Date(order.createdAt).toLocaleString()}</p>
-              <hr />
-            </div>
-          ))}
+          <h2>All Orders</h2>
+          <table className="table table-bordered table-striped mt-4">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Amount</th>
+                <th>Ordered On</th>
+                <th>Order By</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <React.Fragment key={order._id}>
+                  <tr>
+                    <td>{order._id}</td>
+                    <td>${(order.paymentIntent.amount / 100).toFixed(2)}</td>
+                    <td>{new Date(order.paymentIntent.created * 1000).toLocaleString()}</td>
+                    <td>{order.orderedBy.name}</td>
+                    <td>
+                      <select
+                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                        className="form-select"
+                        defaultValue={order.orderStatus}>
+                        <option value="Not Processed">Not Processed</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Dispatched">Dispatched</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Completed">Completed</option>
+                      </select>
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() =>
+                          setOrderDetails((prevDetails) => ({
+                            ...prevDetails,
+                            [order._id]: !prevDetails[order._id],
+                          }))
+                        }>
+                        {orderDetails[order._id] ? "Hide Order Details" : "Show Order Details"}
+                      </button>
+                    </td>
+                  </tr>
+                  {orderDetails[order._id] && (
+                    <tr>
+                      <td colSpan="6">
+                        <div>
+                          <table className="table table-bordered">
+                            <thead className="thead-light">
+                              <tr>
+                                <th>Title</th>
+                                <th>Quantity</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {order.products.map((product) => (
+                                <tr key={product._id}>
+                                  <td>{product.product.title}</td>
+                                  <td>{product.count}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
         </Col>
       </Row>
     </Container>
