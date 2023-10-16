@@ -5,6 +5,8 @@ import Col from "react-bootstrap/Col";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { GetAllUserOrders, changeStatus } from "../../api/allUserOrdersAPI";
+import { PiMagnifyingGlassBold } from "react-icons/pi";
+import { BiSolidHide } from "react-icons/bi";
 
 const UserOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -24,7 +26,7 @@ const UserOrders = () => {
     changeStatus(orderId, orderStatus, user.token)
       .then((res) => {
         toast.success("Status updated successfully");
-        fetchUserOrders()
+        fetchUserOrders();
       })
       .catch((err) => {
         setLoading(false);
@@ -39,80 +41,86 @@ const UserOrders = () => {
   return (
     <Container fluid>
       <Row>
-        <Col lg={12} className="bg-light p-4 overflow-auto container-height">
-          <h2>All Orders</h2>
-          <table className="table table-bordered table-striped mt-4">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Amount</th>
-                <th>Ordered On</th>
-                <th>Order By</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <React.Fragment key={order._id}>
+        <Col lg={12} className="bg-custom p-4 overflow-auto admin-container-height">
+          <div class="card shadow border-0 mb-7 p-3">
+            <div class="card-header">
+              <h5 class="mb-0">All Orders</h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover table-nowrap">
+                <thead class="thead-light">
                   <tr>
-                    <td>{order._id}</td>
-                    <td>${(order.paymentIntent.amount / 100).toFixed(2)}</td>
-                    <td>{new Date(order.paymentIntent.created * 1000).toLocaleString()}</td>
-                    <td>{order.orderedBy.name}</td>
-                    <td>
-                      <select
-                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                        className="form-select"
-                        defaultValue={order.orderStatus}>
-                        <option value="Not Processed">Not Processed</option>
-                        <option value="Processing">Processing</option>
-                        <option value="Dispatched">Dispatched</option>
-                        <option value="Cancelled">Cancelled</option>
-                        <option value="Completed">Completed</option>
-                      </select>
-                    </td>
-                    <td>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() =>
-                          setOrderDetails((prevDetails) => ({
-                            ...prevDetails,
-                            [order._id]: !prevDetails[order._id],
-                          }))
-                        }>
-                        {orderDetails[order._id] ? "Hide Order Details" : "Show Order Details"}
-                      </button>
-                    </td>
+                    <th>#</th>
+                    <th>Amount</th>
+                    <th>Ordered On</th>
+                    <th>Order By</th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
-                  {orderDetails[order._id] && (
-                    <tr>
-                      <td colSpan="6">
-                        <div>
-                          <table className="table table-bordered">
-                            <thead className="thead-light">
-                              <tr>
-                                <th>Title</th>
-                                <th>Quantity</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {order.products.map((product) => (
-                                <tr key={product._id}>
-                                  <td>{product.product.title}</td>
-                                  <td>{product.count}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {orders.map((order) => (
+                    <React.Fragment key={order._id}>
+                      <tr>
+                        <td>{order._id}</td>
+                        <td>${(order.paymentIntent.amount / 100).toFixed(2)}</td>
+                        <td>{new Date(order.paymentIntent.created * 1000).toLocaleString()}</td>
+                        <td>{order.orderedBy.name}</td>
+                        <td>
+                          <select
+                            onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                            className="form-select"
+                            defaultValue={order.orderStatus}>
+                            <option value="Not Processed">Not Processed</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Dispatched">Dispatched</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Completed">Completed</option>
+                          </select>
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-primary"
+                            onClick={() =>
+                              setOrderDetails((prevDetails) => ({
+                                ...prevDetails,
+                                [order._id]: !prevDetails[order._id],
+                              }))
+                            }>
+                            {orderDetails[order._id] ? <BiSolidHide /> : <PiMagnifyingGlassBold />}
+                          </button>
+                        </td>
+                      </tr>
+                      {orderDetails[order._id] && (
+                        <tr>
+                          <td colSpan="6">
+                            <div>
+                              <table className="table table-bordered">
+                                <thead className="thead-light">
+                                  <tr>
+                                    <th>Title</th>
+                                    <th>Quantity</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {order.products.map((product) => (
+                                    <tr key={product._id}>
+                                      <td>{product.product.title}</td>
+                                      <td>{product.count}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </Col>
       </Row>
     </Container>

@@ -106,123 +106,142 @@ const CreateProduct = () => {
   return (
     <Container fluid>
       <Row>
-        <Col lg={12} className="bg-light p-4 overflow-auto container-height ">
-          <h1>Create Product</h1>
-          {/* Upload Image Form */}
-          <div className="d-flex flex-wrap gap-4 my-4 ">
-            {images &&
-              images.map((image) => (
-                <img src={image.url} alt={image.url} width="150" height="120" />
-              ))}
-          </div>
-          <div>
-            <label className="btn btn-primary btn-raised mb-4">
-              Choose File to Upload
-              <input
-                type="file"
-                name="file"
-                multiple
-                accept="images/*"
-                onChange={handleImageUpload}
-                hidden
-              />
-            </label>
-          </div>
+        <Col lg={12} className="bg-custom p-4 overflow-auto admin-container-height ">
+          <div class="card shadow border-0 mb-7 p-3">
+            <div class="card-header">
+              <h5 class="mb-0">Create Product</h5>
+            </div>
+            <div class="card-body">
+              <div className="d-flex flex-wrap mb-4">
+                {images && (
+                  <div className="d-flex flex-wrap gap-4 my-4 ">
+                    {images.map((image) => (
+                      <img src={image.url} alt={image.url} width="120" height="100" />
+                    ))}
+                  </div>
+                )}
 
-          {/* Create Product Form */}
-          <form onSubmit={handleSubmit}>
-            {/* Product Name */}
-            <div className="mb-3">
-              <label htmlFor="title" className="form-label">
-                Product Title
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                autoFocus
-                required
-              />
+                <div className={`mt-4 ${images.length > 0 ? "ps-4" : ""}`}>
+                  <label
+                    className="btn border"
+                    style={{
+                      width: "150px",
+                      height: "120px",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}>
+                    Click to Upload
+                    <input
+                      type="file"
+                      name="file"
+                      multiple
+                      accept="images/*"
+                      onChange={handleImageUpload}
+                      hidden
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3 d-flex align-items-center">
+                  <div className="flex-grow-1 me-3">
+                    <label htmlFor="title" className="form-label">
+                      Product Title
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      autoFocus
+                      required
+                    />
+                  </div>
+                  <div className="flex-grow-1 ">
+                    <label htmlFor="price" className="form-label">
+                      Product Price
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="price"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="description" className="form-label">
+                    Product Description
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="description"
+                    rows="3"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="mb-3 d-flex align-items-center">
+                  <div className="flex-grow-1 me-3">
+                    <label htmlFor="condition" className="form-label">
+                      Product Condition
+                    </label>
+                    <select
+                      className="form-select"
+                      id="condition"
+                      value={condition}
+                      onChange={(e) => setCondition(e.target.value)}
+                      required>
+                      <option value="">Select Condition</option>
+                      <option value="New">New</option>
+                      <option value="Excellent">Excellent</option>
+                      <option value="Average">Average</option>
+                      <option value="Poor">Poor</option>
+                    </select>
+                  </div>
+
+                  <div className="flex-grow-1">
+                    <label htmlFor="category" className="form-label">
+                      Product Category
+                    </label>
+                    <select
+                      className="form-select"
+                      id="category"
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      required>
+                      <option value="">Select Category</option>
+                      <option value="Electronics">Electronics</option>
+                      <option value="Cameras">Cameras</option>
+                      <option value="Laptops">Laptops</option>
+                      <option value="Accessories">Accessories</option>
+                      <option value="Headphones">Headphones</option>
+                      <option value="Food">Food</option>
+                      <option value="Books">Books</option>
+                      <option value="Clothes">Clothes</option>
+                      <option value="Beauty">Beauty</option>
+                      <option value="Sports">Sports</option>
+                      <option value="Outdoor">Outdoor</option>
+                      <option value="Home">Home</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button type="submit" className="btn btn-primary">
+                  Create Product
+                </button>
+              </form>
             </div>
-            {/* Product Description */}
-            <div className="mb-3">
-              <label htmlFor="description" className="form-label">
-                Product Description
-              </label>
-              <textarea
-                className="form-control"
-                id="description"
-                rows="3"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              />
-            </div>
-            {/* Product Price */}
-            <div className="mb-3">
-              <label htmlFor="price" className="form-label">
-                Product Price
-              </label>
-              <input
-                type="number"
-                className="form-control"
-                id="price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                required
-              />
-            </div>
-            {/* Product Condition */}
-            <div className="mb-3">
-              <label htmlFor="condition" className="form-label">
-                Product Condition
-              </label>
-              <select
-                className="form-select"
-                id="condition"
-                value={condition}
-                onChange={(e) => setCondition(e.target.value)}
-                required>
-                <option value="">Select Condition</option>
-                <option value="New">New</option>
-                <option value="Excellent">Excellent</option>
-                <option value="Average">Average</option>
-                <option value="Poor">Poor</option>
-              </select>
-            </div>
-            {/* Product Category */}
-            <div className="mb-3">
-              <label htmlFor="category" className="form-label">
-                Product Category
-              </label>
-              <select
-                className="form-select"
-                id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                required>
-                <option value="">Select Category</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Cameras">Cameras</option>
-                <option value="Laptops">Laptops</option>
-                <option value="Accessories">Accessories</option>
-                <option value="Headphones">Headphones</option>
-                <option value="Food">Food</option>
-                <option value="Books">Books</option>
-                <option value="Clothes">Clothes</option>
-                <option value="Beauty">Beauty</option>
-                <option value="Sports">Sports</option>
-                <option value="Outdoor">Outdoor</option>
-                <option value="Home">Home</option>
-              </select>
-            </div>
-            {/* Submit Button */}
-            <button type="submit" className="btn btn-primary">
-              Create Product
-            </button>
-          </form>
+          </div>
         </Col>
       </Row>
     </Container>

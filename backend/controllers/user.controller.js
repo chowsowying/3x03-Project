@@ -15,6 +15,36 @@ exports.allUsers = async (req, res) => {
   }
 };
 
+//Function to get number of users in database
+exports.userCount = async (req, res) => {
+  try {
+    const userCount = await User.find().estimatedDocumentCount();
+    res.status(200).json({ userCount });
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+};
+
+// Fucntion to get number of orders created
+exports.orderCount = async (req, res) => {
+  try {
+    const orderCount = await Order.find().estimatedDocumentCount();
+    res.status(200).json({ orderCount });
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+};
+
+// Function to get number of products in database
+exports.productCount = async (req, res) => {
+  try {
+    const productCount = await Product.find().estimatedDocumentCount();
+    res.status(200).json({ productCount });
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+};
+
 exports.currentUser = async (req, res) => {
   try {
     const user = await User.findById({ _id: req.userId }).select("-password");

@@ -15,7 +15,10 @@ const {
   getAddress,
   createPaymentIntent,
   createOrder,
-  getUserOrders
+  getUserOrders,
+  userCount,
+  orderCount,
+  productCount,
 } = require("../controllers/user.controller");
 
 //NOTE: Use isAuth is user is required to be authenticated to perform action (e.g. update address)
@@ -32,6 +35,13 @@ router.get("/user/profile-page", isAuth, isUser, currentUser);
 router.put("/user/update-profile", isAuth, isUser, updateProfile);
 // Create new form
 router.post("/user/contact-admin", isAuth, isUser, contactAdmin);
+
+//Get User Count
+router.get("/user/count", isAuth, isAdmin, userCount);
+//Get Order Count
+router.get("/order/count", isAuth, isAdmin, orderCount);
+//Get Product Count
+router.get("/product/count", isAuth, isAdmin, productCount);
 
 //------------User Cart------------------------------------------------
 // Save User cart

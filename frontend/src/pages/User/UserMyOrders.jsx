@@ -18,7 +18,7 @@ const UserOrders = () => {
     } catch (error) {
       toast.error(error.response.data.message);
     }
-  };  
+  };
 
   useEffect(() => {
     fetchUserOrders();

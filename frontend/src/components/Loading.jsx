@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 
 const Loading = () => {
   return (
-    <Container className="d-flex justify-content-center align-items-center container-height">
+    <Container className="d-flex justify-content-center align-items-center admin-container-height">
       <Spinner animation="border" role="status" />
     </Container>
   );

@@ -5,6 +5,7 @@ import Col from "react-bootstrap/Col";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { GetAllProducts, DeleteProduct } from "../../api/productAPI";
+import { AiOutlinePlus, AiFillEdit, AiFillDelete } from "react-icons/ai";
 
 const Products = () => {
   // State
@@ -44,55 +45,64 @@ const Products = () => {
   return (
     <Container fluid>
       <Row>
-        <Col lg={12} className="p-4 overflow-auto container-height">
-          {/* Product Title and Add Product Btn */}
-          <div className="d-flex justify-content-between align-items-center">
-            <h1>Products</h1>
-            <a href="/admin/create-product" className="btn btn-primary">
-              Create Product
-            </a>
-          </div>
-          {/* Search Bar */}
-          <div className="mt-4">
-            <input type="text" className="form-control" placeholder="Search Product" />
-          </div>
-          {/* Product Card Container */}
-          <div className="mt-4">
-            <Row>
-              {/* Product Card */}
-              {products &&
-                products.map((product) => (
-                  <Col lg={3} md={6} className="mb-4">
-                    <div className="card" key={product._id}>
-                      <img
-                        src={
-                          product.images && product.images.length > 0
-                            ? product.images[0].url
-                            : "https://via.placeholder.com/200x200.png?text=Product+Image"
-                        }
-                        className="card-img-top"
-                        height="200"
-                        width="200"
-                      />
-                      <div className="card-body">
-                        <h5 className="card-title">{product.title}</h5>
-                        <p className="card-text">{product.description.substring(0, 100)}</p>
-                        <p className="card-text">${product.price}</p>
+        <Col lg={12} className="bg-custom p-4 overflow-auto admin-container-height">
+          <div class="card shadow border-0 mb-7 p-3">
+            <div class="card-header">
+              <div className="d-flex justify-content-between align-items-center">
+                <h5>All Products</h5>
+                <a href="/admin/create-product" className="btn btn-primary">
+                  <AiOutlinePlus className="mb-1" />
+                </a>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover table-nowrap">
+                <thead class="thead-light">
+                  <tr>
+                    <th>#</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((product, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <img
+                          src={
+                            product.images && product.images.length > 0
+                              ? product.images[0].url
+                              : "https://via.placeholder.com/200x200.png?text=Product+Image"
+                          }
+                          className="card-img-top object-fit-cover"
+                          height="50"
+                          width="50"
+                        />
+                      </td>
+                      <td>{product.title}</td>
+                      <td>{product.description.substring(0, 100)}</td>
+                      <td>${product.price}</td>
+                      <td>
                         <div className="d-flex gap-2">
                           <a
                             href={`/admin/update-product/${product.slug}`}
-                            className="btn btn-primary">
-                            Edit
+                            className="btn btn-success">
+                            <AiFillEdit className="mb-1" />
                           </a>
                           <a onClick={() => handleDelete(product.slug)} className="btn btn-danger">
-                            Delete
+                            <AiFillDelete className="mb-1" />
                           </a>
                         </div>
-                      </div>
-                    </div>
-                  </Col>
-                ))}
-            </Row>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </Col>
       </Row>
@@ -101,3 +111,37 @@ const Products = () => {
 };
 
 export default Products;
+
+//  {/* Product Card */}
+//  {products &&
+//   products.map((product) => (
+//     <Col lg={3} md={6} className="mb-4">
+//       <div className="card" key={product._id}>
+//         <img
+//           src={
+//             product.images && product.images.length > 0
+//               ? product.images[0].url
+//               : "https://via.placeholder.com/200x200.png?text=Product+Image"
+//           }
+//           className="card-img-top"
+//           height="200"
+//           width="200"
+//         />
+//         <div className="card-body">
+//           <h5 className="card-title">{product.title}</h5>
+//           <p className="card-text">{product.description.substring(0, 100)}</p>
+//           <p className="card-text">${product.price}</p>
+//           <div className="d-flex gap-2">
+//             <a
+//               href={`/admin/update-product/${product.slug}`}
+//               className="btn btn-primary">
+//               Edit
+//             </a>
+//             <a onClick={() => handleDelete(product.slug)} className="btn btn-danger">
+//               Delete
+//             </a>
+//           </div>
+//         </div>
+//       </div>
+//     </Col>
+//   ))}

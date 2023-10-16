@@ -8,6 +8,24 @@ export const GetAllUsers = async (authtoken) => {
   return await axios.get(url, { headers });
 };
 
+export const GetUserCount = async (authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/user/count`;
+  const headers = { authtoken };
+  return await axios.get(url, { headers });
+};
+
+export const GetOrderCount = async (authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/order/count`;
+  const headers = { authtoken };
+  return await axios.get(url, { headers });
+};
+
+export const GetProductCount = async (authtoken) => {
+  const url = `${import.meta.env.VITE_APP_API}/product/count`;
+  const headers = { authtoken };
+  return await axios.get(url, { headers });
+};
+
 export const GetSingleUser = async (authtoken) => {
   const url = `${import.meta.env.VITE_APP_API}/user/profile-page`;
   const headers = { authtoken };

@@ -37,30 +37,36 @@ const Users = () => {
   return (
     <Container fluid>
       <Row>
-        <Col lg={12} className="bg-light p-4 overflow-auto container-height ">
-          <h1 className="mb-4">All Users</h1>
-          <Table striped bordered hover responsive>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Email Address</th>
-                <th>Role</th>
-                <th>Created At</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.role}</td>
-                  <td>{user.createdAt}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+        <Col lg={12} className="bg-custom p-4 overflow-auto admin-container-height ">
+          <div class="card shadow border-0 mb-7 p-3">
+            <div class="card-header">
+              <h5 class="mb-0">All Users</h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover table-nowrap">
+                <thead class="thead-light">
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email Address</th>
+                    <th>Role</th>
+                    <th>Created At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((user, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{user.name}</td>
+                      <td>{user.email}</td>
+                      <td>{user.role}</td>
+                      <td>{user.createdAt}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </Col>
       </Row>
     </Container>
