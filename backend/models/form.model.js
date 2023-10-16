@@ -11,7 +11,11 @@ const formSchema = new mongoose.Schema(
         type: String,
         required: true,
     },
-   },
+    sender: {
+        type: String,
+        required:true,
+    }
+},
     { timestamps: true }
 );
 

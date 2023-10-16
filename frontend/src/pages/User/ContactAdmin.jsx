@@ -5,16 +5,18 @@ import Col from "react-bootstrap/Col";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Form } from "react-bootstrap/";
-import { CreateNewForm } from "../../api/userAPI";
+import { CreateNewForm, GetSingleUser } from "../../api/userAPI";
 import { setLoading } from "../../redux/loaderSlice";
 
 const ContactAdmin = () => {
+  const [sender, setSender] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
   const values = {
     title,
     description,
+    sender,
   };
 
   const dispatch = useDispatch();
@@ -25,6 +27,17 @@ const ContactAdmin = () => {
     // Check if both title and description are not empty
     setIsFormValid(title.trim() !== "" && description.trim() !== "");
   }, [title, description]);
+
+  // Function: Get Single User
+  const fetchUser = async () => {
+    try {
+      const response = await GetSingleUser(user.token);
+      // Set sender as email 
+      setSender(response.data.email);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
 
   // Function: Send Form
   const handleClick = async (e) => {
@@ -45,6 +58,11 @@ const ContactAdmin = () => {
       toast.error(error.response.data.message);
     }
   };
+
+   // UseEffect: Fetch Single User
+   useEffect(() => {
+    fetchUser();
+  }, []);
 
   return (
     <Container fluid className="order d-flex align-items-center justify-content-center">
