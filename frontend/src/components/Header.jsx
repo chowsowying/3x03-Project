@@ -25,7 +25,10 @@ const Header = () => {
     navigate("/login");
   };
   return (
-    <Navbar collapseOnSelect expand="lg" className="bg-white px-3 border-bottom">
+    <Navbar
+      collapseOnSelect
+      expand="lg"
+      className={`bg-white px-3 ${user && user.role === "user" ? "border-none" : "border-bottom"}`}>
       <Container fluid>
         <Navbar.Brand href="/" className="fw-bold">
           ThirdLife

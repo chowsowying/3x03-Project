@@ -21,11 +21,10 @@ const Footer = () => {
         </MDBFooter>
       )}
       {user && user.role === "user" && (
-        <MDBFooter className="bg-dark text-center text-white">
+        <MDBFooter className="bg-dark text-center border">
           <MDBContainer className="p-4 pb-0">
             <section>
               <p className="d-flex justify-content-center align-items-center">
-                <span className="me-3">Contact Us</span>
                 <a href="/user/contact-admin">
                   <MDBBtn type="button" outline color="light" rounded>
                     Contact an Admin
@@ -34,13 +33,7 @@ const Footer = () => {
               </p>
             </section>
           </MDBContainer>
-
-          <div className="text-center p-3" style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}>
-            © 2020 Copyright:
-            <a className="text-white" href="https://mdbootstrap.com/">
-              MDBootstrap.com
-            </a>
-          </div>
+          {/* <div className="text-center p-3">© 2023 Copyright Team 35</div> */}
         </MDBFooter>
       )}
     </div>

@@ -149,7 +149,9 @@ const Cart = () => {
             </Col>
           </>
         ) : (
-          <h4>No products in cart</h4>
+          <Col lg={12} className="p-4 overflow-auto container-height">
+            <h4>No products in cart</h4>
+          </Col>
         )}
       </Row>
     </Container>

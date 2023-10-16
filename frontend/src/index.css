@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap");
 
 .container-height {
-  height: calc(100vh - 180px); /* Adjust for the 60px navbar height */
+  height: calc(100vh - 138px); /* Adjust for the 60px navbar height */
 }
 
 .admin-container-height {
