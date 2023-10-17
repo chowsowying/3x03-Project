@@ -9,14 +9,34 @@ import { AiFillEye } from "react-icons/ai";
 const Home = () => {
   // State
   const [products, setProducts] = useState([]);
+  const [keyword, setKeyword] = useState("");
 
-  //Function: Get All Products
+  // Function: Get All Products
   const fetchProducts = async () => {
     try {
       const response = await GetAllProducts();
       setProducts(response.data);
     } catch (error) {
       toast.error(error.response.data.message);
+    }
+  };
+
+  // Function: Search products by keywords
+  const searchHandler = (e) => {
+    e.preventDefault();
+  
+    const searchKeyword = keyword.toLowerCase();
+  
+    if (searchKeyword === "") {
+      // If the search keyword is empty, fetch all products
+      fetchProducts();
+    } else {
+      // Filter products based on the keywords present in title or description
+      const filteredProducts = products.filter((product) =>
+        product.title.toLowerCase().includes(searchKeyword) ||
+        product.description.toLowerCase().includes(searchKeyword)
+      );
+      setProducts(filteredProducts);
     }
   };
 
@@ -42,7 +62,22 @@ const Home = () => {
             </Col>
             <Col lg={10} className=" ">
               {/* Search Bar */}
-              <input type="text" className="form-control" placeholder="Search Product" />
+              <form onSubmit={searchHandler} className="row">
+                <div className="col">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Product"
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                  />
+                </div>
+                <div className="col-auto">
+                  <button type="submit" className="btn btn-primary">
+                    Search
+                  </button>
+                </div>
+              </form>
               {/* Product Card Container */}
               <div className="mt-4">
                 <Row>
