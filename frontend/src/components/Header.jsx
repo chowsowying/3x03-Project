@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../redux/userSlice";
 import { addToCart } from "../redux/cartSlice";
+import { FaUser } from "react-icons/fa";
 
 const Header = () => {
   // Declare variables
@@ -27,7 +28,9 @@ const Header = () => {
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-white px-3 border-bottom">
       <Container fluid>
-        <Navbar.Brand href="/" className="fw-bold">
+        <Navbar.Brand
+          href={user && user.role === "admin" ? "/admin/dashboard" : "/"}
+          className="fw-bold">
           ThirdLife
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -39,9 +42,6 @@ const Header = () => {
           )}
           {user && user.role === "admin" && (
             <>
-              <Nav.Link href="/admin/dashboard" className="pe-4">
-                Overview
-              </Nav.Link>
               <Nav.Link href="/admin/users" className="pe-4">
                 Users
               </Nav.Link>
@@ -52,14 +52,26 @@ const Header = () => {
                 Products
               </Nav.Link>
               <Nav className="ms-auto">
-                <NavDropdown title={user.name && user.name} id="collasible-nav-dropdown">
+                {/* <NavDropdown title={user.name && user.name} id="collasible-nav-dropdown">
                   <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-                </NavDropdown>
+                </NavDropdown> */}
+                <Nav.Link className="d-flex align-items-center gap-2">
+                  <FaUser /> {user.name && user.name}
+                </Nav.Link>
+                <button className="btn btn-danger" onClick={handleLogout}>
+                  Logout
+                </button>
               </Nav>
             </>
           )}
           {user && user.role === "user" && (
             <>
+              <Nav.Link href="/user/my-orders" className="pe-4">
+                My Orders
+              </Nav.Link>
+              <Nav.Link href="/user/profile" className="pe-4">
+                My Profile
+              </Nav.Link>
               <Nav className="ms-auto">
                 <Nav.Link href="/cart">
                   Cart
@@ -67,11 +79,13 @@ const Header = () => {
                     {cart.length && cart.length}
                   </span>
                 </Nav.Link>
-                <NavDropdown title={user.name && user.name} id="collasible-nav-dropdown">
-                  <NavDropdown.Item href="/user/my-orders">My Orders</NavDropdown.Item>
-                  <NavDropdown.Item href="/user/profile">My Profile</NavDropdown.Item>
-                  <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-                </NavDropdown>
+
+                <Nav.Link className="d-flex align-items-center gap-2">
+                  <FaUser /> {user.name && user.name}
+                </Nav.Link>
+                <button className="btn btn-danger" onClick={handleLogout}>
+                  Logout
+                </button>
               </Nav>
             </>
           )}

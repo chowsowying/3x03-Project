@@ -67,7 +67,7 @@ const UpdateProfile = () => {
     <Container fluid>
       <Row>
         <Col lg={12} className="p-4 overflow-auto container-height">
-          <h1 className="mb-4">Update Profile</h1>
+          <h2 className="mb-4">Update Profile</h2>
           <div style={{ maxWidth: "650px" }}>
             <Form>
               <Form.Label>Name</Form.Label>
@@ -106,11 +106,16 @@ const UpdateProfile = () => {
               onChange={(e) => setReenteredPassword(e.target.value)}
             />
             <Form.Text id="passwordHelpBlock" muted>
-              Your password must be 15-64 characters long, contains one special character, capital letter, and number.
+              Your password must be 15-64 characters long, contains one special character, capital
+              letter, and number.
             </Form.Text>
             {passwordMatchError && <div className="text-danger">{passwordMatchError}</div>}
             <a>
-              <Button onClick={handleClick} variant="primary" className="mt-3" disabled={passwordMatchError !== ""}>
+              <Button
+                onClick={handleClick}
+                variant="primary"
+                className="mt-3"
+                disabled={passwordMatchError !== ""}>
                 Update
               </Button>
             </a>

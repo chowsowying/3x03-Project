@@ -30,45 +30,55 @@ const Register = () => {
   };
 
   return (
-    <Container className="mt-5">
+    <Container fluid className="bg-primary login-container-height">
       <Row>
-        <Col>
-          <h1>Register Now</h1>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="name">
-              <Form.Control
-                type="name"
-                value={name}
-                onChange={(ev) => setName(ev.target.value)}
-                placeholder="Enter name"
-                className="mt-4"
-              />
-            </Form.Group>
-            <Form.Group controlId="email">
-              <Form.Control
-                type="email"
-                value={email}
-                onChange={(ev) => setEmail(ev.target.value)}
-                placeholder="Enter email"
-                className="mt-4"
-              />
-            </Form.Group>
-            <Form.Group controlId="password">
-              <Form.Control
-                type="password"
-                value={password}
-                onChange={(ev) => setPassword(ev.target.value)}
-                placeholder="Enter password"
-                className="mt-4"
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit" className="mt-4">
-              Register
-            </Button>
-          </Form>
-          <p className="mt-3">
-            Have an account ? <Link to="/login">Login</Link>
-          </p>
+        <Col sm={9} md={7} lg={5} className="mx-auto">
+          <div class="card border-0 shadow rounded-3 my-5 ">
+            <div class="card-body p-4 p-sm-5">
+              <h5 class="card-title text-center mb-5 fw-medium fs-5">Register</h5>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="name">
+                  <Form.Control
+                    type="name"
+                    value={name}
+                    onChange={(ev) => setName(ev.target.value)}
+                    placeholder="Enter Name"
+                    className="mt-4"
+                  />
+                </Form.Group>
+                <Form.Group controlId="email">
+                  <Form.Control
+                    type="email"
+                    value={email}
+                    onChange={(ev) => setEmail(ev.target.value)}
+                    placeholder="Enter email"
+                    className="mt-4"
+                  />
+                </Form.Group>
+                <Form.Group controlId="password">
+                  <Form.Control
+                    type="password"
+                    value={password}
+                    onChange={(ev) => setPassword(ev.target.value)}
+                    placeholder="Enter password"
+                    className="mt-4"
+                  />
+                </Form.Group>
+
+                <Button variant="primary" type="submit" className="w-100 mt-4">
+                  Register
+                </Button>
+
+                <hr class="my-4" />
+                {/* Login */}
+                <div className="text-center">
+                  <p className="mt-3">
+                    Already have an account ? <Link to="/login">Login</Link>
+                  </p>
+                </div>
+              </Form>
+            </div>
+          </div>
         </Col>
       </Row>
     </Container>

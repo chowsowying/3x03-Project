@@ -33,7 +33,7 @@ const UserProfile = () => {
     <Container fluid>
       <Row>
         <Col lg={12} className="p-4 overflow-auto container-height">
-          <h1 className="mb-4">User Profile</h1>
+          <h2 className="mb-4">User Profile</h2>
           <div style={{ maxWidth: "600px" }}>
             <ListGroup>
               <ListGroup.Item>Name: {users.name}</ListGroup.Item>

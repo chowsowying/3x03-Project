@@ -40,41 +40,52 @@ const Login = () => {
   };
 
   // If user is logged in, prevent user from accessing login page
-  // useEffect(() => {
-  //   if (user && user.token) navigate("/");
-  // }, [user]);
+  useEffect(() => {
+    if (user && user.token && user.role === "admin") navigate("/admin/dashboard");
+    else if (user && user.token) navigate("/");
+  }, [user]);
 
   return (
-    <Container className="mt-5">
+    <Container fluid className="bg-primary login-container-height">
       <Row>
-        <Col>
-          <h1>Login Now</h1>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="email">
-              <Form.Control
-                type="email"
-                value={email}
-                onChange={(ev) => setEmail(ev.target.value)}
-                placeholder="Enter email"
-                className="mt-4"
-              />
-            </Form.Group>
-            <Form.Group controlId="password">
-              <Form.Control
-                type="password"
-                value={password}
-                onChange={(ev) => setPassword(ev.target.value)}
-                placeholder="Enter password"
-                className="mt-4"
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit" className="mt-4">
-              Login
-            </Button>
-          </Form>
-          <p className="mt-3">
-            Don't have an account ? <Link to="/register">Register</Link>
-          </p>
+        <Col sm={9} md={7} lg={5} className="mx-auto">
+          <div class="card border-0 shadow rounded-3 my-5">
+            <div class="card-body p-4 p-sm-5">
+              <h5 class="card-title text-center mb-5 fw-medium fs-5">Sign In</h5>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="email">
+                  <Form.Control
+                    type="email"
+                    value={email}
+                    onChange={(ev) => setEmail(ev.target.value)}
+                    placeholder="Enter email"
+                    className="mt-4"
+                  />
+                </Form.Group>
+                <Form.Group controlId="password">
+                  <Form.Control
+                    type="password"
+                    value={password}
+                    onChange={(ev) => setPassword(ev.target.value)}
+                    placeholder="Enter password"
+                    className="mt-4"
+                  />
+                </Form.Group>
+
+                <Button variant="primary" type="submit" className="w-100 mt-4">
+                  Login
+                </Button>
+
+                <hr class="my-4" />
+                {/* Register */}
+                <div className="text-center">
+                  <p className="mt-3">
+                    Don't have an account ? <Link to="/register">Register</Link>
+                  </p>
+                </div>
+              </Form>
+            </div>
+          </div>
         </Col>
       </Row>
     </Container>
