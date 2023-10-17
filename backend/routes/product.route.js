@@ -11,6 +11,7 @@ const {
   getSingleProduct,
   updateProduct,
   deleteProduct,
+  getRelatedProducts,
 } = require("../controllers/product.controller");
 
 // routes
@@ -25,5 +26,7 @@ router.get("/product/:slug", getSingleProduct);
 router.put("/product/:slug", isAuth, isAdmin, updateProduct);
 // Delete product
 router.delete("/product/:slug", isAuth, isAdmin, deleteProduct);
+//Get Related Products
+router.get("/product/related/:slug", getRelatedProducts);
 
 module.exports = router;

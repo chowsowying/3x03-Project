@@ -18,3 +18,12 @@
 .bg-custom {
   background-color: #efefef !important;
 }
+
+.slider-wrapper {
+  height: 400px;
+}
+
+.slider img {
+  height: 400px;
+  object-fit: cover;
+}

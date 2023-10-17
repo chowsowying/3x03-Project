@@ -27,3 +27,8 @@ export const DeleteProduct = async (slug, authtoken) => {
   const headers = { authtoken };
   return await axios.delete(url, { headers });
 };
+
+export const GetRelatedProduct = async (slug) => {
+  const url = `${import.meta.env.VITE_APP_API}/product/related/${slug}`;
+  return await axios.get(url);
+};

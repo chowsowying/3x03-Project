@@ -102,3 +102,20 @@ exports.deleteProduct = async (req, res) => {
     res.status(400).json({ message: error.message, success: false });
   }
 };
+
+exports.getRelatedProducts = async (req, res) => {
+  try {
+    // Get product
+    const product = await Product.findOne({ slug: req.params.slug }).exec();
+    // Get related products
+    const relatedProducts = await Product.find({
+      _id: { $ne: product._id },
+      category: product.category,
+    }).limit(3);
+    // Send response
+    res.status(200).json(relatedProducts);
+  } catch (error) {
+    // Send error response
+    res.status(400).json({ message: error.message, success: false });
+  }
+};
