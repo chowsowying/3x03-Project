@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { HiUsers } from "react-icons/hi";
 import { GoListUnordered } from "react-icons/go";
 import { MdProductionQuantityLimits } from "react-icons/md";
+import { getEnquiries, deleteEnquiry } from "../../api/adminAPI";
 
 const AdminDashboard = () => {
   //State
@@ -46,10 +47,32 @@ const AdminDashboard = () => {
     }
   };
 
+  const [enquiries, setEnquiries] = useState([]);
+
+  const fetchEnquiries = async () => {
+    try {
+      const response = await getEnquiries(user.token);
+      setEnquiries(response.data);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const handleDeleteEnquiry = async (enquiryId) => {
+    try {
+      await deleteEnquiry(enquiryId, user.token);
+      toast.success("Enquiry deleted successfully.");
+      fetchEnquiries(); // Refresh the enquiries list after deletion
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };  
+
   useEffect(() => {
     fetchUserCount();
     fetchOrdersCount();
     fetchProductsCount();
+    fetchEnquiries();
   }, []);
 
   return (
@@ -99,21 +122,39 @@ const AdminDashboard = () => {
           </Row>
           <Row>
             <Col lg={12} className="pt-4 overflow-auto">
-              <div class="card shadow border-0 mb-7 p-3">
-                <div class="card-header">
-                  <h5 class="mb-0">Enquires</h5>
+              <div className="card shadow border-0 mb-7 p-3">
+                <div className="card-header">
+                  <h5 className="mb-0">Enquiries</h5>
                 </div>
-                <div class="table-responsive">
-                  <table class="table table-hover table-nowrap">
-                    <thead class="thead-light">
+                <div className="table-responsive">
+                  <table className="table table-hover table-nowrap">
+                    <thead className="thead-light">
                       <tr>
                         <th>#</th>
-                        <th>User</th>
-                        <th>Message</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Sender</th>
                         <th>Action</th>
                       </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                      {enquiries.map((enquiry, index) => (
+                        <tr key={enquiry._id}>
+                          <td>{index + 1}</td>
+                          <td>{enquiry.title}</td>
+                          <td>{enquiry.description}</td>
+                          <td>{enquiry.sender}</td>
+                          <td>
+                          <button 
+                            className="btn btn-success" 
+                            onClick={() => handleDeleteEnquiry(enquiry._id)}
+                          >
+                            Mark As Resolved
+                          </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
                   </table>
                 </div>
               </div>

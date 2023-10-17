@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { GetAllUserOrders, changeStatus } from "../../api/allUserOrdersAPI";
+import { GetAllUserOrders, changeStatus } from "../../api/adminAPI";
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { BiSolidHide } from "react-icons/bi";
 

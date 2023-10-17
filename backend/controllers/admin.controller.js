@@ -30,3 +30,23 @@ exports.orderStatus = async (req, res) => {
     res.status(400).json({ message: error.message, success: false });
   }
 };
+
+const Form = require("../models/form.model"); // Import the Form model
+
+exports.getEnquiries = async (req, res) => {
+  try {
+    const enquiries = await Form.find().exec();
+    res.status(200).json(enquiries);
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+};
+exports.deleteEnquiry = async (req, res) => {
+  try {
+    const { enquiryId } = req.params; // Get enquiry ID from the request parameters
+    await Form.findByIdAndDelete(enquiryId); // Delete the enquiry
+    res.status(200).json({ message: "Enquiry deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+};

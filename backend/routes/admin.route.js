@@ -5,17 +5,19 @@ const router = express.Router();
 const { isAuth, isAdmin, isUser } = require("../middlewares/auth.middleware");
 
 // Controllers
-const { getAllOrders, orderStatus } = require("../controllers/all-user-orders.controller");
+const { getAllOrders, orderStatus, getEnquiries, deleteEnquiry } = require("../controllers/admin.controller");
 
 // Routes
 
-// // Get all orders for a specific user
-// router.get("/user/orders", isAuth, isUser, getUserOrders);
+// Order Routes
 // Get all orders for all users (Admin only)
 router.get("/user-orders", isAuth, isAdmin, getAllOrders);
 
 router.put("/order-status", isAuth, isAdmin, orderStatus);
 
-// Add more routes related to orders as needed...
+// User Enquiries Routes
+router.get('/enquiries', isAuth, isAdmin, getEnquiries);
+router.delete('/enquiry/:enquiryId', isAuth, isAdmin, deleteEnquiry);
+
 
 module.exports = router;
