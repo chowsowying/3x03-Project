@@ -8,6 +8,7 @@ import { addToCart } from "../redux/cartSlice";
 import { toast } from "react-toastify";
 import { userCart } from "../api/userAPI";
 import { setLoading } from "../redux/loaderSlice";
+import { FaTrash } from "react-icons/fa";
 
 const Cart = () => {
   const { user } = useSelector((state) => state.user);
@@ -61,11 +62,11 @@ const Cart = () => {
 
   return (
     <Container fluid>
-      <Row>
+      <Row className="">
         {cart.length > 0 ? (
           <>
             {/* Right Side - Cart Items */}
-            <Col lg={8} className="p-4 overflow-auto container-height">
+            <Col lg={12} className="overflow-auto p-4 container-height">
               <div className="d-flex flex-row justify-content-between">
                 <h2>Cart</h2>
                 <h2>{cart.length} products</h2>
@@ -92,59 +93,29 @@ const Cart = () => {
                         <h3>${c.price}</h3>
                       </div>
                     </div>
-                    <div className="d-flex flex-row gap-5 align-items-center">
+                    <div className="d-flex flex-row gap-5 align-items-center justify-content-center">
                       {/* Delete Button */}
                       <button
                         onClick={() => {
                           handleCartRemove(c._id);
                         }}
                         className="btn btn-danger fw-bold">
-                        Remove Item
+                        <FaTrash />
                       </button>
                     </div>
                   </div>
                 ))}
               </div>
+              <hr />
               {/* Continue Shopping */}
-              <div className="d-flex justify-content-end">
+              <div className="d-flex justify-content-between">
                 <a href="/" className="btn btn-primary">
                   Continue Shopping
                 </a>
-              </div>
-            </Col>
-
-            {/* Left Side - Order Summery */}
-            <Col lg={4} className="p-4 overflow-auto container-height bg-light">
-              <h2 className="mb-4">Order Summery</h2>
-              <hr />
-              <div className="d-flex flex-column justify-content-between">
-                <div>
-                  {cart.map((c, i) => (
-                    <div key={i} className="">
-                      <p className="mb-3">
-                        {c.title} x {c.count} = ${c.price * c.count}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                <div>
-                  <hr />
-                  <h1 className="text-2xl fw-bold my-5">Total: ${handleCartTotal()}</h1>
-                  {user ? (
-                    <button onClick={handleSaveCartToDatabase} className="btn btn-primary w-100">
-                      Proceed to checkout
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        navigate("/login");
-                      }}
-                      className="btn btn-primary w-100">
-                      Login to Checkout
-                    </button>
-                  )}
-                </div>
+                {/* Checkout*/}
+                <button onClick={handleSaveCartToDatabase} className="btn btn-primary fw-bold">
+                  Checkout
+                </button>
               </div>
             </Col>
           </>
