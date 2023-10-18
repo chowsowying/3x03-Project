@@ -1,6 +1,13 @@
 const Product = require("../models/product.model");
 const User = require("../models/user.model");
 const slugify = require("slugify");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 exports.createProduct = async (req, res) => {
   try {
@@ -114,6 +121,22 @@ exports.getRelatedProducts = async (req, res) => {
     }).limit(3);
     // Send response
     res.status(200).json(relatedProducts);
+  } catch (error) {
+    // Send error response
+    res.status(400).json({ message: error.message, success: false });
+  }
+};
+
+exports.removeImage = async (req, res) => {
+  try {
+    // Get public_id from request body
+    const { public_id } = req.body;
+    console.log(public_id);
+    // Delete image from cloudinary
+    const result = await cloudinary.uploader.destroy(public_id);
+
+    // Send response
+    res.status(200).json({ message: "Image deleted successfully", success: true });
   } catch (error) {
     // Send error response
     res.status(400).json({ message: error.message, success: false });

@@ -12,6 +12,7 @@ const {
   updateProduct,
   deleteProduct,
   getRelatedProducts,
+  removeImage,
 } = require("../controllers/product.controller");
 
 // routes
@@ -28,5 +29,7 @@ router.put("/product/:slug", isAuth, isAdmin, updateProduct);
 router.delete("/product/:slug", isAuth, isAdmin, deleteProduct);
 //Get Related Products
 router.get("/product/related/:slug", getRelatedProducts);
+//Remove Image
+router.post("/removeimage", isAuth, isAdmin, removeImage);
 
 module.exports = router;

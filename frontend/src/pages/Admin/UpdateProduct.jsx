@@ -116,6 +116,35 @@ const UpdateProduct = () => {
     }
   };
 
+  //Function: Handle Remove Image
+  const handleDeleteImage = (id) => {
+    dispatch(setLoading(true));
+    axios
+      .post(
+        `${import.meta.env.VITE_APP_API}/removeimage`,
+        { public_id: id },
+        {
+          headers: {
+            authtoken: user ? user.token : "",
+          },
+        }
+      )
+      .then((res) => {
+        dispatch(setLoading(false));
+        toast.success("Image Deleted");
+        // Remove Image from image state
+        let filteredImages = images.filter((image) => {
+          return image.public_id !== id;
+        });
+        setImages(filteredImages);
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(setLoading(false));
+        toast.error(err.response.data.message);
+      });
+  };
+
   // UseEffect: Fetch Single Product
   useEffect(() => {
     fetchProduct();
@@ -132,9 +161,24 @@ const UpdateProduct = () => {
             <div class="card-body">
               <div className="d-flex flex-wrap mb-4">
                 {images && (
-                  <div className="d-flex flex-wrap gap-4 my-4 ">
-                    {images.map((image) => (
-                      <img src={image.url} alt={image.url} width="120" height="100" />
+                  <div className="d-flex flex-wrap gap-4 my-4">
+                    {images.map((image, index) => (
+                      <div className="image-container" key={index}>
+                        <div className="position-relative">
+                          <img
+                            src={image.url}
+                            alt={image.url}
+                            width="120"
+                            height="100"
+                            className="border rounded"
+                          />
+                          <button
+                            onClick={() => handleDeleteImage(image.public_id)}
+                            className="btn btn-danger position-absolute top-0 end-0">
+                            X
+                          </button>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 )}
