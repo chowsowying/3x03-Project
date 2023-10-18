@@ -51,14 +51,7 @@ const Home = () => {
     const category = e.target.value;
     setSelectedCategory(category);
 
-    if (category === "All") {
-      setProducts(allProducts);
-    } else {
-      const filteredProducts = allProducts.filter((product) =>
-        product.category === category
-      );
-      setProducts(filteredProducts);
-    }
+    filterProducts(category, selectedPrice, selectedCondition);
   };
 
   // Function: Handle Price change
@@ -66,12 +59,7 @@ const Home = () => {
     const priceRange = e.target.value;
     setSelectedPrice(priceRange);
 
-    const [minPrice, maxPrice] = getPriceRange(priceRange);
-
-    const filteredProducts = allProducts.filter((product) =>
-      product.price >= minPrice && product.price <= maxPrice
-    );
-    setProducts(filteredProducts);
+    filterProducts(selectedCategory, priceRange, selectedCondition);
   };
 
   // Function to get the price range based on the selected radio button
@@ -95,15 +83,34 @@ const Home = () => {
     const condition = e.target.value;
     setSelectedCondition(condition);
 
-    const filteredProducts = allProducts.filter((product) =>
-      product.condition === condition
-    );
+    filterProducts(selectedCategory, selectedPrice, condition);
+  };
+
+  // Function to filter products based on category, price, and condition
+  const filterProducts = (category, priceRange, condition) => {
+    let filteredProducts = allProducts;
+
+    // Filter by Category
+    if (category !== "All") {
+      filteredProducts = filteredProducts.filter((product) => product.category === category);
+    }
+    // Filter by Price
+    if (priceRange) {
+      const [minPrice, maxPrice] = getPriceRange(priceRange);
+      filteredProducts = filteredProducts.filter((product) =>
+        product.price >= minPrice && product.price <= maxPrice
+      );
+    }
+    // Filter by Condition
+    if (condition) {
+      filteredProducts = filteredProducts.filter((product) => product.condition === condition);
+    }
     setProducts(filteredProducts);
   };
 
   // Function: Reset all filters and deselect radio buttons
   const resetFilters = () => {
-    setSelectedCategory("");
+    setSelectedCategory("All");
     setSelectedPrice("");
     setSelectedCondition("");
     setProducts(allProducts);
