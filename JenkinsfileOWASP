@@ -1,13 +1,13 @@
 pipeline {
 	agent any
 	stages {
-		stage('Checkout SCM') {
+		stage('Build') {
 			steps {
 				git branch: 'main', url: 'https://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@github.com/chowsowying/3x03-Project.git'
 			}
 		}
 
-		stage('OWASP DependencyCheck') {
+		stage('Test') {
 			steps {
 				dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'OWASP Dependency Check'
 			}
@@ -16,6 +16,7 @@ pipeline {
 	post {
 		success {
 			dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+			echo'auto build works or no'
 		}
 	}
 }
