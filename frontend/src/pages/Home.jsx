@@ -2,20 +2,26 @@ import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { Form, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { GetAllProducts } from "../api/productAPI";
 import { AiFillEye } from "react-icons/ai";
 
 const Home = () => {
   // State
+  const [allProducts, setAllProducts] = useState([]); // Separate array to store all products
   const [products, setProducts] = useState([]);
   const [keyword, setKeyword] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedPrice, setSelectedPrice] = useState("");
+  const [selectedCondition, setSelectedCondition] = useState("");
 
   // Function: Get All Products
   const fetchProducts = async () => {
     try {
       const response = await GetAllProducts();
       setProducts(response.data);
+      setAllProducts(response.data);
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -40,6 +46,69 @@ const Home = () => {
     }
   };
 
+  // Function: Handle Category change
+  const handleCategoryChange = (e) => {
+    const category = e.target.value;
+    setSelectedCategory(category);
+
+    if (category === "All") {
+      setProducts(allProducts);
+    } else {
+      const filteredProducts = allProducts.filter((product) =>
+        product.category === category
+      );
+      setProducts(filteredProducts);
+    }
+  };
+
+  // Function: Handle Price change
+  const handlePriceChange = (e) => {
+    const priceRange = e.target.value;
+    setSelectedPrice(priceRange);
+
+    const [minPrice, maxPrice] = getPriceRange(priceRange);
+
+    const filteredProducts = allProducts.filter((product) =>
+      product.price >= minPrice && product.price <= maxPrice
+    );
+    setProducts(filteredProducts);
+  };
+
+  // Function to get the price range based on the selected radio button
+  const getPriceRange = (selectedPrice) => {
+    switch (selectedPrice) {
+      case "$Under $50":
+        return [0, 49];
+      case "$50-100":
+        return [50, 100];
+      case "$100-300":
+        return [101, 300];
+      case "Over $300":
+        return [301, Number.MAX_VALUE];
+      default:
+        return [0, Number.MAX_VALUE];
+    }
+  };
+
+  // Function: Handle Condition change
+  const handleConditionChange = (e) => {
+    const condition = e.target.value;
+    setSelectedCondition(condition);
+
+    const filteredProducts = allProducts.filter((product) =>
+      product.condition === condition
+    );
+    setProducts(filteredProducts);
+  };
+
+  // Function: Reset all filters and deselect radio buttons
+  const resetFilters = () => {
+    setSelectedCategory("");
+    setSelectedPrice("");
+    setSelectedCondition("");
+    setProducts(allProducts);
+  };
+
   // UseEffect: Fetch All Products
   useEffect(() => {
     fetchProducts();
@@ -56,9 +125,44 @@ const Home = () => {
             alt="Header"
           />
           <Row className="mt-4">
-            <Col lg={2} className="">
-              To be implemented filter by price range, filter by category, filter by condition ,
-              clear filter
+            <Col lg={1} className="">
+              {/* Filters */}
+              <div className="mb-2" style={{ fontSize: "24px", fontWeight: "bold" }}>Category</div>
+              {["All", "Electronics", "Cameras", "Laptops", "Accessories", "Headphones", "Food", "Books", "Clothes", "Beauty", "Sports", "Outdoor", "Home"].map(category => (
+                <Form.Check
+                  type="radio"
+                  name="category"
+                  label={category}
+                  value={category}
+                  checked={selectedCategory === category}
+                  onChange={handleCategoryChange}
+                />
+              ))}
+              <div className="mb-2" style={{ fontSize: "24px", fontWeight: "bold" }}>Price</div>
+              {["$Under $50", "$50-100", "$100-300", "Over $300"].map(priceRange => (
+                <Form.Check
+                  type="radio"
+                  name="price"
+                  label={priceRange}
+                  value={priceRange}
+                  checked={selectedPrice === priceRange}
+                  onChange={handlePriceChange}
+                />
+              ))}
+              <div className="mb-2" style={{ fontSize: "24px", fontWeight: "bold" }}>Condition</div>
+              {["New", "Excellent", "Average", "Poor"].map(condition => (
+                <Form.Check
+                  type="radio"
+                  name="condition"
+                  label={condition}
+                  value={condition}
+                  checked={selectedCondition === condition}
+                  onChange={handleConditionChange}
+                />
+              ))}
+              <button type="button" className="btn btn-secondary mt-2" onClick={resetFilters}>
+              Reset Filters
+              </button>
             </Col>
             <Col lg={10} className=" ">
               {/* Search Bar */}
@@ -73,9 +177,9 @@ const Home = () => {
                   />
                 </div>
                 <div className="col-auto">
-                  <button type="submit" className="btn btn-primary">
+                  <Button type="submit" className="btn btn-primary">
                     Search
-                  </button>
+                  </Button>
                 </div>
               </form>
               {/* Product Card Container */}
