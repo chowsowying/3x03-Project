@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
@@ -7,19 +7,46 @@ import { RegisterUser } from "../api/authAPI";
 import { setLoading } from "../redux/loaderSlice";
 
 const Register = () => {
-  // States
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState("weak");
 
-  // Declare variables
   const dispatch = useDispatch();
 
-  // Function: Register user
+  // Function to calculate password strength
+  const calculatePasswordStrength = (input) => {
+    const lengthRegex = /^.{15,64}$/;
+    const specialCharRegex = /[!@#\$%\^&\*\(\)_\+\-=\[\]\{\};:'",<>\./?\\|`~]/;
+    const capitalLetterRegex = /[A-Z]/;
+    const numberRegex = /[0-9]/;
+
+    const isLengthValid = lengthRegex.test(input);
+    const hasSpecialChar = specialCharRegex.test(input);
+    const hasCapitalLetter = capitalLetterRegex.test(input);
+    const hasNumber = numberRegex.test(input);
+
+    if (isLengthValid && hasSpecialChar && hasCapitalLetter && hasNumber) {
+      setPasswordStrength("strong");
+    } else if ((isLengthValid && hasSpecialChar && hasNumber)
+    ) {
+      setPasswordStrength("medium");
+    } else {
+      setPasswordStrength("weak");
+    }
+  };
+
   const handleSubmit = async (ev) => {
     ev.preventDefault();
     try {
       dispatch(setLoading(true));
+      // Check password strength before registering
+      calculatePasswordStrength(password);
+      if (passwordStrength === "weak") {
+        toast.error("Password does not meet the required strength criteria. Password should contains 15-64 characters, at least 1 special character, 1 capital letter and 1 number");
+        dispatch(setLoading(false));
+        return;
+      }
       const response = await RegisterUser(name, email, password);
       dispatch(setLoading(false));
       toast.success(response.data.message);
@@ -33,9 +60,9 @@ const Register = () => {
     <Container fluid className="bg-primary login-container-height">
       <Row>
         <Col sm={9} md={7} lg={5} className="mx-auto">
-          <div class="card border-0 shadow rounded-3 my-5 ">
-            <div class="card-body p-4 p-sm-5">
-              <h5 class="card-title text-center mb-5 fw-medium fs-5">Register</h5>
+          <div className="card border-0 shadow rounded-3 my-5">
+            <div className="card-body p-4 p-sm-5">
+              <h5 className="card-title text-center mb-5 fw-medium fs-5">Register</h5>
               <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="name">
                   <Form.Control
@@ -59,21 +86,22 @@ const Register = () => {
                   <Form.Control
                     type="password"
                     value={password}
-                    onChange={(ev) => setPassword(ev.target.value)}
+                    onChange={(ev) => {
+                      setPassword(ev.target.value);
+                      calculatePasswordStrength(ev.target.value);
+                    }}
                     placeholder="Enter password"
                     className="mt-4"
                   />
+                  <div className={`strength-bar strength-${passwordStrength}`}></div>
                 </Form.Group>
-
                 <Button variant="primary" type="submit" className="w-100 mt-4">
                   Register
                 </Button>
-
-                <hr class="my-4" />
-                {/* Login */}
+                <hr className="my-4" />
                 <div className="text-center">
                   <p className="mt-3">
-                    Already have an account ? <Link to="/login">Login</Link>
+                    Already have an account? <Link to="/login">Login</Link>
                   </p>
                 </div>
               </Form>
