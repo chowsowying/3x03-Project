@@ -2,14 +2,75 @@ const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
+//for implementation of password strength
+const passwordValidator = require('password-validator');
+const schema = new passwordValidator();
+
+//password strength requirements
+schema
+  .is().min(15)        // Minimum length 15 characters
+  .is().max(64)        // Maximum length 64 characters
+  .has().uppercase(1)  // At least 1 uppercase letter
+  .has().digits(1)    // At least 1 digit
+  .has().symbols(1)   // At least 1 special character (!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~)
+
+
+  // function to check for valid names to prevent SQL injection
+  function isValidName(name) {
+    // Use a regular expression to validate the name format (letters only)
+    const nameRegex = /^[A-Za-z\s]+$/; // Allow letters and spaces
+    return nameRegex.test(name);
+  }
+
+
+    //function to check for valid email to prevent SQL injection
+    function isValidEmail(email) {
+      //Regular expression to validate the email format
+      const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z.-]+[A-Za-z]{2,4}$/;
+      return emailRegex.test(email);
+    }
+
 //Fucntion to register user
 exports.register = async (req, res) => {
   try {
+    const { name, email, password }= req.body;
+    // Check if the name is missing
+    if (!name) {
+      return res.status(400).json({ message: "Please fill up your name.", success: false });
+    }
+    // Check if the name contains invalid characters
+    if (!isValidName(name)) {
+      return res.status(400).json({ message: "Please provide a valid name.", success: false });
+    }
+    // Check if the email is missing
+    if (!email) {
+      return res.status(400).json({ message: "Please fill in your email.", success: false });
+    }
+        // Check if the email is invalid
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: "Please provide a valid email address.", success: false });
+        }
+
+    // Check if the password is missing
+    if (!password) {
+      return res.status(400).json({ message: "Please fill in your password.", success: false });
+    }
+    
     //Check if user already exists
     const user = await User.findOne({ email: req.body.email });
     if (user) {
       return res.status(400).json({ message: "This email already exists.", success: false });
     }
+
+    // Check if the password meets the strength criteria
+    if (!schema.validate(req.body.password)) {
+      return res.status(400).json({
+        message: "Password does not meet the required strength criteria. Password should contains 15-64 characters, at least 1 special character, 1 capital letter and 1 number.",
+        success: false
+        });
+      }
+
+
 
     //Generate a unique salt per user
     const salt = crypto.randomBytes(16).toString("hex");
@@ -43,9 +104,25 @@ exports.login = async (req, res) => {
   try {
     //Check if user exists
     const user = await User.findOne({ email: req.body.email });
+    const { email, password } = req.body;
+
+    // Check if the email is missing
+    if (!email) {
+      return res.status(400).json({ message: "Please fill in your email.", success: false });
+  }
+
+  // Check if the password is missing
+    if (!password) {
+      return res.status(400).json({ message: "Please fill in your password.", success: false });
+  }  
+    
+    
+    
     if (!user) {
       return res.status(400).json({ message: "This email does not exist", success: false });
     }
+
+
 
     //Pre-hash the provided password if it's longer than the block size
     let preHashedPassword = req.body.password;
