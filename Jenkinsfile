@@ -24,7 +24,6 @@ pipeline {
 		stage('Test') {
 			steps {
 				dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'OWASP Dependency Check'
-				echo'Unit testing'
 			}
 		}
 	}	
