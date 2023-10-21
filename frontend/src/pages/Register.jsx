@@ -36,17 +36,11 @@ const Register = () => {
     }
   };
 
+  // Function: Register user
   const handleSubmit = async (ev) => {
     ev.preventDefault();
     try {
       dispatch(setLoading(true));
-      // Check password strength before registering
-      calculatePasswordStrength(password);
-      if (passwordStrength === "weak") {
-        toast.error("Password does not meet the required strength criteria. Password should contains 15-64 characters, at least 1 special character, 1 capital letter and 1 number");
-        dispatch(setLoading(false));
-        return;
-      }
       const response = await RegisterUser(name, email, password);
       dispatch(setLoading(false));
       toast.success(response.data.message);
