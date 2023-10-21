@@ -25,7 +25,6 @@ pipeline {
 			steps {
 				dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'OWASP Dependency Check'
 				echo'Unit testing'
-				echo 'selenium ? test'
 			}
 		}
 	}	
