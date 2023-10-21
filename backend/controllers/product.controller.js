@@ -2,6 +2,7 @@ const Product = require("../models/product.model");
 const User = require("../models/user.model");
 const slugify = require("slugify");
 const cloudinary = require("cloudinary").v2;
+const sanitizeHtml = require('sanitize-html');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -9,8 +10,70 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+const forbiddenCharacters = /[$.{}]/;
+const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
+
+//Input Validation function check for title
+function isValidTitleCheck(data) {
+  if (
+    data.title.trim() === "" ||
+    typeof data.title !== "string" || 
+    forbiddenCharacters.test(data.title)
+  ) {
+    return false;
+  }
+  return true;
+}
+
+//Input Validation function check for description
+function isValidDescriptionCheck(data) {
+  if (
+    data.description.trim() === "" ||
+    typeof data.description !== "string" ||
+    forbiddenCharacters.test(data.description)
+  ) {
+    return false;
+  }
+  return true;
+}
+
+//Input Validation function check for price
+function isValidPriceCheck(data) {
+  if (
+    data.price.trim() === "" ||
+    data.price <= 0 ||
+    !priceRegex.test(data.price.toString())
+  ) {
+    return false;
+  }
+  return true;
+}
+
 exports.createProduct = async (req, res) => {
   try {
+    //Input Validation function call for title
+    if (!isValidTitleCheck(req.body)) {
+      return res.status(400).json({
+        message: "Invalid input data on title! Please no use $.{}",
+        success: false,
+      });
+    }
+    else if (!isValidDescriptionCheck(req.body)) {
+      return res.status(400).json({
+        message: "Invalid input data on description! Please no use $.{}",
+        success: false,
+      });
+    }
+    else if (!isValidPriceCheck(req.body)) {
+      return res.status(400).json({
+        message: "That is not a valid price!",
+        success: false,
+      });
+    }
+    //sanitise the input data
+    req.body.title = sanitizeHtml(req.body.title);
+    req.body.description = sanitizeHtml(req.body.description);
+
     //Get title from request body and slugify it
     req.body.slug = slugify(req.body.title);
     // Create new product
@@ -25,7 +88,7 @@ exports.createProduct = async (req, res) => {
     if (error.name === "ValidationError") {
       // Validation error
       res.status(400).json({
-        message: "Product name must < 32 characters",
+        message: "Product name must < 32 characters and Description must be < 2000",
         success: false,
       });
     } else if (error.code === 11000) {
@@ -82,7 +145,7 @@ exports.updateProduct = async (req, res) => {
     if (error.name === "ValidationError") {
       // Validation error
       res.status(400).json({
-        message: "Product name must < 32 characters",
+        message: "Product name must < 32 characters and Description must be < 2000",
         success: false,
       });
     } else if (error.code === 11000) {
