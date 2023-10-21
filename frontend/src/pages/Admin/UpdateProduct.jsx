@@ -72,12 +72,36 @@ const UpdateProduct = () => {
 
   //Function: Upload Image
   const handleImageUpload = (ev) => {
+    const allowedExtensions = ["jpg", "jpeg", "png"];
+    const maxFileSize = 10 * 1024 * 1024; // 10MB
     let files = ev.target.files;
     let allUploadedFiles = values.images;
     // Resize Images
     if (files) {
       dispatch(setLoading(true));
       for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileExtension = file.name.split(".").pop().toLowerCase();
+
+        //Does not allow multiple extension
+        if (file.name.split(".").length > 2) {
+          console.error("File with multiple extensions not allowed");
+          toast.error("File with multiple extensions not allowed");
+          continue;
+        }
+        //Extension not .png, .jpg or .jpeg
+        if (!allowedExtensions.includes(fileExtension)) {
+          console.error("Invalid file extension");
+          toast.error("Invalid file extension");
+          continue;
+        }
+        //File size must be below 10MB
+        if (file.size > maxFileSize) {
+          console.error("File size too large");
+          toast.error("File size too large");
+          continue;
+        }
+
         Resizer.imageFileResizer(
           files[i],
           720,
@@ -194,7 +218,7 @@ const UpdateProduct = () => {
                       justifyContent: "center",
                       alignItems: "center",
                     }}>
-                    Click to Upload
+                    Click to Upload Image
                     <input
                       type="file"
                       name="file"

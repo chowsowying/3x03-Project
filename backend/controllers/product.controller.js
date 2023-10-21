@@ -127,6 +127,29 @@ exports.getSingleProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   try {
+    //Input Validation function call for title
+    if (!isValidTitleCheck(req.body)) {
+      return res.status(400).json({
+        message: "Invalid input data on title! Please no use $.{}",
+        success: false,
+      });
+    }
+    else if (!isValidDescriptionCheck(req.body)) {
+      return res.status(400).json({
+        message: "Invalid input data on description! Please no use $.{}",
+        success: false,
+      });
+    }
+    else if (!isValidPriceCheck(req.body)) {
+      return res.status(400).json({
+        message: "That is not a valid price!",
+        success: false,
+      });
+    }
+    //sanitise the input data
+    req.body.title = sanitizeHtml(req.body.title);
+    req.body.description = sanitizeHtml(req.body.description);
+    
     // Get title from request body and slugify it
     if (req.body.title) {
       req.body.slug = slugify(req.body.title);

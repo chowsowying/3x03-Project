@@ -199,7 +199,7 @@ const CreateProduct = () => {
                       justifyContent: "center",
                       alignItems: "center",
                     }}>
-                    Click to Upload
+                    Click to Upload Image
                     <input
                       type="file"
                       name="file"
