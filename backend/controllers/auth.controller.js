@@ -1,5 +1,6 @@
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 //Fucntion to register user
 exports.register = async (req, res) => {
@@ -10,12 +11,27 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: "This email already exists.", success: false });
     }
 
+    //Generate a unique salt per user
+    const salt = crypto.randomBytes(16).toString("hex");
+
+    //Pre-hash the password if it's longer than the block size
+    let preHashedPassword = req.body.password;
+    if (preHashedPassword.length > 64) {
+      preHashedPassword = crypto.createHash("sha256").update(req.body.password).digest("hex");
+    }
+
     //Hash password
+    const hashedPassword = crypto.pbkdf2Sync(preHashedPassword, salt, 600000, 64, "sha256").toString("hex");
 
     //Create new user
-    await User.create(req.body);
+    await User.create({
+      name: req.body.name,
+      email: req.body.email,
+      salt: salt,
+      password: hashedPassword,
+    });
 
-    // Send response
+    //Send response
     res.status(201).json({ message: "User registered successfully.", success: true });
   } catch (error) {
     res.status(500).json({ message: "Failed to register user.", success: false });
@@ -31,10 +47,17 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "This email does not exist", success: false });
     }
 
-    //Check if password is correct from db ( to update after hashing password)
-    const isPasswordCorrect = req.body.password === user.password;
+    //Pre-hash the provided password if it's longer than the block size
+    let preHashedPassword = req.body.password;
+    if (preHashedPassword.length > 64) {
+      preHashedPassword = crypto.createHash("sha256").update(req.body.password).digest("hex");
+    }
 
-    if (!isPasswordCorrect) {
+    //hash the password with the per user salt stored in database
+    const hashedPassword = crypto.pbkdf2Sync(preHashedPassword, user.salt, 600000, 64, "sha256").toString("hex");
+
+    //Verify the hashed password with the database password
+    if (hashedPassword !== user.password) {
       return res.status(400).json({ message: "Password is incorrect.", success: false });
     }
 
