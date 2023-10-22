@@ -204,7 +204,6 @@ exports.currentUser = async (req, res) => {
 };
 
 // Function for forgot password
-// TODO: Test this whole function
 exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -223,28 +222,25 @@ exports.forgotPassword = async (req, res) => {
         .json({ message: "Please provide a valid email address.", success: false });
     }
 
+    // Generate a unique token for password reset
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    // Set an expiration time for the reset token (e.g., 5 mins from now)
+    const resetTokenExpiry = Date.now() + 300000; // 5 mins in milliseconds
+
     // Find the user with the provided email
     const user = await User.findOne({ email: req.body.email });
 
     // If the user exists, handle it
     if (user) {
-      // Generate a unique token for password reset
-      const resetToken = crypto.randomBytes(32).toString("hex");
-
-      // Set an expiration time for the reset token (e.g., 5 mins from now)
-      const resetTokenExpiry = Date.now() + 300000; // 5 mins in milliseconds
-
       // Store the token and its expiration time in the user's record in the database
       user.resetToken = resetToken;
       user.resetTokenExpiry = resetTokenExpiry;
       await user.save();
     }
 
-    console.log();
-
     // Redirect user to reset password regardless of whether the email exists or not
-    // res.redirect(`/reset-password?resetToken=${user.resetToken}`);
-    res.status(200).json({ resetToken: user.resetToken, success: true });
+    res.status(200).json({ resetToken: resetToken, success: true });
   } catch (error) {
     res
       .status(500)
@@ -304,6 +300,8 @@ exports.resetPassword = async (req, res) => {
     const resetToken = req.query.resetToken;
 
     // For testing, set the reset token to a placeholder value if it's not provided
+    // TODO: Redirect the user back to the forgot password page if the reset token is not provided
+    // (i.e. if the user manually browses to the reset password page)
     if (!resetToken) {
       resetToken = "iamnotarealtoken";
       //return res.status(400).json({ message: "A valid reset token is required.", success: false });

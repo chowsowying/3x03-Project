@@ -14,11 +14,17 @@ const ForgotPassword = () => {
   const navigate = useNavigate();
 
   // Function: Forget password
-  // TODO: Fix the linking of frontend to backend
   const handleSubmit = async (ev) => {
     ev.preventDefault();
     try {
       dispatch(setLoading(true));
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
+      if (!emailRegex.test(email)) {
+        toast.error("Please enter a valid email address.");
+        return;
+      }
 
       const response = await fetch("http://localhost:4000/api/forgot-password", {
         method: "POST",
@@ -33,14 +39,13 @@ const ForgotPassword = () => {
       if (response.ok) {
         const responseData = await response.json(); // Parse the response JSON
         const resetToken = responseData.resetToken;
-
-        toast.success("Password reset link has been sent to your email address.");
-        console.log(responseData);
+        // Give generic message regardless of success or failure, then redirect
+        toast.success("Please enter your OTP to reset your password.");
         navigate(`/reset-password?resetToken=${resetToken}`);
       } else {
         // Handle the case where the response status is not ok (e.g., 400, 500)
-        // Display an error message or perform some other error handling.
         toast.error("Failed to initiate the password reset process.");
+
       }
     } catch (error) {
       dispatch(setLoading(false));
