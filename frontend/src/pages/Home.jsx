@@ -32,15 +32,21 @@ const Home = () => {
     e.preventDefault();
   
     const searchKeyword = keyword.toLowerCase();
-  
-    if (searchKeyword === "") {
+
+    // Define a blacklist of special characters
+    const specialCharacterBlacklist = /[$&+,:;=?@#|'<>.^*()%!-]/g;
+    
+    //sanitise and remove the special characters
+    const sanitizedKeyword = searchKeyword.replace(specialCharacterBlacklist, "");
+
+    if (sanitizedKeyword === "") {
       // If the search keyword is empty, fetch all products
       fetchProducts();
     } else {
       // Filter products based on the keywords present in title or description
       const filteredProducts = products.filter((product) =>
-        product.title.toLowerCase().includes(searchKeyword) ||
-        product.description.toLowerCase().includes(searchKeyword)
+        product.title.toLowerCase().includes(sanitizedKeyword) ||
+        product.description.toLowerCase().includes(sanitizedKeyword)
       );
       setProducts(filteredProducts);
     }

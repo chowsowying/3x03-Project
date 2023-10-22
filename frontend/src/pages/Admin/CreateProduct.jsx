@@ -135,13 +135,14 @@ const CreateProduct = () => {
               .then((res) => {
                 dispatch(setLoading(false));
                 console.log("IMAGE UPLOAD RES DATA", res);
-
-                allUploadedFiles.push({
-                  public_id: res.data.public_id,
-                  url: res.data.secure_url,
-                });
+                if (res.data.public_id && res.data.secure_url && res.data.secure_url.includes(res.data.public_id)) {
+                  allUploadedFiles.push({
+                    public_id: res.data.public_id,
+                    url: res.data.secure_url,
+                  });
                 setImages(allUploadedFiles);
                 toast.success("Image Uploaded");
+                }
               })
               .catch((err) => {
                 dispatch(setLoading(false));
