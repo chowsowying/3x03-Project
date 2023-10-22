@@ -82,6 +82,9 @@ const Login = () => {
                   <p className="mt-3">
                     Don't have an account ? <Link to="/register">Register</Link>
                   </p>
+                  <p className="mt-3">
+                    Forgot your password ? <Link to="/forgot-password">Forgot Password</Link>
+                  </p>
                 </div>
               </Form>
             </div>
