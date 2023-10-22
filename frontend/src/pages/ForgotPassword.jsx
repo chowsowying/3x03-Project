@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../redux/loaderSlice";
 
@@ -11,6 +11,7 @@ const ForgotPassword = () => {
 
   // Declare variables
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Function: Forget password
   // TODO: Fix the linking of frontend to backend
@@ -18,23 +19,29 @@ const ForgotPassword = () => {
     ev.preventDefault();
     try {
       dispatch(setLoading(true));
-      
-      const response = await fetch('/api/forgot-password', {
-        method: 'POST',
+
+      const response = await fetch("http://localhost:4000/api/forgot-password", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
       });
 
-      await response.json();
-  
-      // Check if the response indicates failure
-      if (!response.success) {
-        toast.error(response.message);
-      }
-  
       dispatch(setLoading(false));
+
+      if (response.ok) {
+        const responseData = await response.json(); // Parse the response JSON
+        const resetToken = responseData.resetToken;
+
+        toast.success("Password reset link has been sent to your email address.");
+        console.log(responseData);
+        navigate(`/reset-password?resetToken=${resetToken}`);
+      } else {
+        // Handle the case where the response status is not ok (e.g., 400, 500)
+        // Display an error message or perform some other error handling.
+        toast.error("Failed to initiate the password reset process.");
+      }
     } catch (error) {
       dispatch(setLoading(false));
       toast.error("Failed to initiate the password reset process.");

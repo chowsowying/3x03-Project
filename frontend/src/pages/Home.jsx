@@ -30,12 +30,12 @@ const Home = () => {
   // Function: Search products by keywords
   const searchHandler = (e) => {
     e.preventDefault();
-  
+
     const searchKeyword = keyword.toLowerCase();
 
     // Define a blacklist of special characters
     const specialCharacterBlacklist = /[$&+,:;=?@#|'<>.^*()%!-]/g;
-    
+
     //sanitise and remove the special characters
     const sanitizedKeyword = searchKeyword.replace(specialCharacterBlacklist, "");
 
@@ -44,9 +44,10 @@ const Home = () => {
       fetchProducts();
     } else {
       // Filter products based on the keywords present in title or description
-      const filteredProducts = products.filter((product) =>
-        product.title.toLowerCase().includes(sanitizedKeyword) ||
-        product.description.toLowerCase().includes(sanitizedKeyword)
+      const filteredProducts = products.filter(
+        (product) =>
+          product.title.toLowerCase().includes(sanitizedKeyword) ||
+          product.description.toLowerCase().includes(sanitizedKeyword)
       );
       setProducts(filteredProducts);
     }
@@ -103,8 +104,8 @@ const Home = () => {
     // Filter by Price
     if (priceRange) {
       const [minPrice, maxPrice] = getPriceRange(priceRange);
-      filteredProducts = filteredProducts.filter((product) =>
-        product.price >= minPrice && product.price <= maxPrice
+      filteredProducts = filteredProducts.filter(
+        (product) => product.price >= minPrice && product.price <= maxPrice
       );
     }
     // Filter by Condition
@@ -140,8 +141,24 @@ const Home = () => {
           <Row className="mt-4">
             <Col lg={1} className="">
               {/* Filters */}
-              <div className="mb-2" style={{ fontSize: "24px", fontWeight: "bold" }}>Category</div>
-              {["All", "Electronics", "Cameras", "Laptops", "Accessories", "Headphones", "Food", "Books", "Clothes", "Beauty", "Sports", "Outdoor", "Home"].map(category => (
+              <div className="mb-2" style={{ fontSize: "24px", fontWeight: "bold" }}>
+                Category
+              </div>
+              {[
+                "All",
+                "Electronics",
+                "Cameras",
+                "Laptops",
+                "Accessories",
+                "Headphones",
+                "Food",
+                "Books",
+                "Clothes",
+                "Beauty",
+                "Sports",
+                "Outdoor",
+                "Home",
+              ].map((category) => (
                 <Form.Check
                   type="radio"
                   name="category"
@@ -151,8 +168,10 @@ const Home = () => {
                   onChange={handleCategoryChange}
                 />
               ))}
-              <div className="mb-2" style={{ fontSize: "24px", fontWeight: "bold" }}>Price</div>
-              {["$Under $50", "$50-100", "$100-300", "Over $300"].map(priceRange => (
+              <div className="mb-2" style={{ fontSize: "24px", fontWeight: "bold" }}>
+                Price
+              </div>
+              {["$Under $50", "$50-100", "$100-300", "Over $300"].map((priceRange) => (
                 <Form.Check
                   type="radio"
                   name="price"
@@ -162,8 +181,10 @@ const Home = () => {
                   onChange={handlePriceChange}
                 />
               ))}
-              <div className="mb-2" style={{ fontSize: "24px", fontWeight: "bold" }}>Condition</div>
-              {["New", "Excellent", "Average", "Poor"].map(condition => (
+              <div className="mb-2" style={{ fontSize: "24px", fontWeight: "bold" }}>
+                Condition
+              </div>
+              {["New", "Excellent", "Average", "Poor"].map((condition) => (
                 <Form.Check
                   type="radio"
                   name="condition"
@@ -173,11 +194,11 @@ const Home = () => {
                   onChange={handleConditionChange}
                 />
               ))}
-              <button type="button" className="btn btn-secondary mt-2" onClick={resetFilters}>
-              Reset Filters
+              <button type="button" className="btn btn-danger mt-4 w-100" onClick={resetFilters}>
+                Reset
               </button>
             </Col>
-            <Col lg={10} className=" ">
+            <Col lg={11} className=" ">
               {/* Search Bar */}
               <form onSubmit={searchHandler} className="row">
                 <div className="col">
