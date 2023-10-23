@@ -4,6 +4,7 @@ const Product = require("../models/product.model");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Order = require("../models/order.model");
 const Form = require("../models/form.model");
+const crypto = require("crypto");
 
 
 
@@ -98,7 +99,7 @@ exports.updateProfile = async (req, res) => {
       password: req.body.password,
     };
     
-    const { name, email, password } = updatedFields;
+    const { name, email, password, salt } = updatedFields;
     
     // Validate name
     if (!name) {
@@ -126,7 +127,6 @@ exports.updateProfile = async (req, res) => {
       return res.status(400).json({ message: "Please fill in your password.", success: false });
     }
   
-    
     // Check if the password meets the strength criteria
     if (!schema.validate(password)) {
       return res.status(400).json({
@@ -135,6 +135,21 @@ exports.updateProfile = async (req, res) => {
         success: false,
       });
     }
+
+    //Generate a unique salt per user
+    const newSalt = crypto.randomBytes(16).toString("hex");
+
+    //Pre-hash the new password if it's longer than the block size of 64
+    let preHashedPassword = password;
+    if (preHashedPassword.length > 64) {
+      preHashedPassword = crypto.createHash("sha256").update(password).digest("hex");
+    }
+
+    //Hash new password
+    const newHashedPassword = crypto.pbkdf2Sync(preHashedPassword, newSalt, 600000, 64, "sha256").toString("hex");
+
+    updatedFields.salt = newSalt;
+    updatedFields.password = newHashedPassword;
     
     // Find and update the user by ID
     const updatedUser = await User.findByIdAndUpdate(
