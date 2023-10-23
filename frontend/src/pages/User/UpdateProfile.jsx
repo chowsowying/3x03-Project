@@ -42,6 +42,8 @@ const UpdateProfile = () => {
       const response = await UpdateSingleProfile(values, user.token);
       dispatch(setLoading(false));
       toast.success(response.data.message);
+      // Reload the page after a successful update
+      window.location.reload();
     } catch (error) {
       dispatch(setLoading(false));
       toast.error(error.response.data.message);

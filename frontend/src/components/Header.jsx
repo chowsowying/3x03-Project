@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -6,10 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../redux/userSlice";
 import { addToCart } from "../redux/cartSlice";
+import { GetSingleUser } from "../api/userAPI";
 import { FaUser } from "react-icons/fa";
 
 const Header = () => {
   // Declare variables
+  const [users, setUser] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
@@ -25,6 +28,22 @@ const Header = () => {
     //redirect
     navigate("/login");
   };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await GetSingleUser(user.token);
+        dispatch(setUser(response.data));
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    };
+    // Fetch the user data when the component mounts and whenever user changes
+    if (user) {
+      fetchUser();
+    }
+  }, [user]);
+
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-white px-3 border-bottom">
       <Container fluid>
@@ -81,7 +100,7 @@ const Header = () => {
                 </Nav.Link>
 
                 <Nav.Link className="d-flex align-items-center gap-2">
-                  <FaUser /> {user.name && user.name}
+                  <FaUser /> {users.name && users.name}
                 </Nav.Link>
                 <button className="btn btn-danger" onClick={handleLogout}>
                   Logout
