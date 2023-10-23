@@ -5,6 +5,41 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Order = require("../models/order.model");
 const Form = require("../models/form.model");
 
+
+
+//for implementation of password strength
+const passwordValidator = require("password-validator");
+const schema = new passwordValidator();
+
+//password strength requirements
+schema
+  .is()
+  .min(15) // Minimum length 15 characters
+  .is()
+  .max(64) // Maximum length 64 characters
+  .has()
+  .uppercase(1) // At least 1 uppercase letter
+  .has()
+  .digits(1) // At least 1 digit
+  .has()
+  .symbols(1); // At least 1 special character (!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~)
+
+// function to check for valid names to prevent SQL injection
+function isValidName(name) {
+  // Use a regular expression to validate the name format (letters only)
+  const nameRegex = /^[A-Za-z\s]+$/; // Allow letters and spaces
+  return nameRegex.test(name);
+}
+
+//function to check for valid email to prevent SQL injection
+function isValidEmail(email) {
+  //Regular expression to validate the email format
+  const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z.-]+[A-Za-z]{2,4}$/;
+  return emailRegex.test(email);
+}
+
+
+
 // Function to get current user
 exports.allUsers = async (req, res) => {
   try {
@@ -53,30 +88,67 @@ exports.currentUser = async (req, res) => {
     res.status(500).json({ message: error.message, success: false });
   }
 };
-
+//function to update profile
 exports.updateProfile = async (req, res) => {
   try {
-    // Request object
     const userId = req.userId;
-
     const updatedFields = {
       name: req.body.name,
       email: req.body.email,
       password: req.body.password,
     };
-
+    
+    const { name, email, password } = updatedFields;
+    
+    // Validate name
+    if (!name) {
+      return res.status(400).json({ message: "Please fill up your name.", success: false });
+    }
+    if (!isValidName(name)) {
+      return res.status(400).json({ message: "Please provide a valid name.", success: false });
+    }
+    
+    // Validate email
+    if (!email) {
+      return res.status(400).json({ message: "Please fill in your email.", success: false });
+    }
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: "Please provide a valid email address.", success: false });
+    }
+    // Check if a user with the same email already exists
+    const userWithSameEmail = await User.findOne({ email: email });
+    if (userWithSameEmail && userWithSameEmail._id != userId) {
+      return res.status(400).json({ message: "This email already exists.", success: false });
+    }
+    
+    // Check if the password is missing
+    if (!password) {
+      return res.status(400).json({ message: "Please fill in your password.", success: false });
+    }
+  
+    
+    // Check if the password meets the strength criteria
+    if (!schema.validate(password)) {
+      return res.status(400).json({
+        message:
+          "Password does not meet the required strength criteria. Password should contain 15-64 characters, at least 1 special character, 1 capital letter, and 1 number.",
+        success: false,
+      });
+    }
+    
     // Find and update the user by ID
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $set: updatedFields },
       { new: true }
     ).exec();
-
+    
     if (!updatedUser) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ message: "User not found", success: false });
     }
+    
     res.status(200).json({
-      message: "Profile updated successfully",
+      message: "Profile updated successfully!",
       success: true,
       data: updatedUser,
     });
