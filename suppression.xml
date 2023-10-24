@@ -7,4 +7,11 @@
       <sha1>e018c53b47f47ca61def8b4f47927c297b21c436</sha1>
       <vulnerabilityName>CVE-2023-45857</vulnerabilityName>
    </suppress>
+   <suppress>
+      <notes><![CDATA[
+      file name: protobufjs:6.11.4
+      ]]></notes>
+      <sha1>667b9a3656ada5646f32d404f804236c518164c2</sha1>
+      <cve>CVE-2023-36665</cve>
+   </suppress>
 </suppressions>
