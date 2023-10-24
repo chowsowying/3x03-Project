@@ -7,32 +7,4 @@
       <sha1>e018c53b47f47ca61def8b4f47927c297b21c436</sha1>
       <vulnerabilityName>CVE-2023-45857</vulnerabilityName>
    </suppress>
-   <suppress>
-      <notes><![CDATA[
-      file name: word-wrap:1.2.5
-      ]]></notes>
-      <sha1>a715cdecca6648bf1397afd73cdd0ce5e15e1fd3</sha1>
-      <cve>CVE-2023-26115</cve>
-   </suppress>
-   <suppress>
-      <notes><![CDATA[
-      file name: protobufjs:7.2.4
-      ]]></notes>
-      <sha1>7fd4be5c4632ab78d239a792d9b096157880651b</sha1>
-      <vulnerabilityName>CVE-2023-36665</vulnerabilityName>
-   </suppress>
-   <suppress>
-      <notes><![CDATA[
-      file name: protobufjs:6.11.4
-      ]]></notes>
-      <sha1>667b9a3656ada5646f32d404f804236c518164c2</sha1>
-      <vulnerabilityName>CVE-2022-25878</vulnerabilityName>
-   </suppress>
-   <suppress>
-      <notes><![CDATA[
-      file name: protobufjs:6.11.4
-      ]]></notes>
-      <sha1>667b9a3656ada5646f32d404f804236c518164c2</sha1>
-      <cve>CVE-2023-36665</cve>
-   </suppress>
 </suppressions>
