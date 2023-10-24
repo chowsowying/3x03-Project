@@ -14,4 +14,18 @@
       <sha1>667b9a3656ada5646f32d404f804236c518164c2</sha1>
       <cve>CVE-2023-36665</cve>
    </suppress>
+   <suppress>
+      <notes><![CDATA[
+      file name: protobufjs:7.2.4
+      ]]></notes>
+      <sha1>7fd4be5c4632ab78d239a792d9b096157880651b</sha1>
+      <vulnerabilityName>CVE-2023-36665</vulnerabilityName>
+   </suppress>
+   <suppress>
+      <notes><![CDATA[
+      file name: protobufjs:6.11.4
+      ]]></notes>
+      <sha1>667b9a3656ada5646f32d404f804236c518164c2</sha1>
+      <vulnerabilityName>CVE-2022-25878</vulnerabilityName>
+   </suppress>
 </suppressions>
