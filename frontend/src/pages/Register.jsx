@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { RegisterUser } from "../api/authAPI";
 import { setLoading } from "../redux/loaderSlice";
+import ReCAPTCHA from "react-google-recaptcha"; // Import reCAPTCHA component
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -35,6 +36,12 @@ const Register = () => {
       setPasswordStrength("weak");
     }
   };
+
+    // Function to handle reCAPTCHA response
+    const handleRecaptchaChange = (value) => {
+      // Set the reCAPTCHA response in the state
+        setRecaptchaResponse(value);
+    };
 
   // Function: Register user
   const handleSubmit = async (ev) => {
@@ -89,6 +96,10 @@ const Register = () => {
                   />
                   <div className={`strength-bar strength-${passwordStrength}`}></div>
                 </Form.Group>
+                <ReCAPTCHA
+                    sitekey="6LffvsIoAAAAABex3MhobFX_6so-zEAwggYwKBjs"
+                    onChange={handleRecaptchaChange}
+                  />
                 <Button variant="primary" type="submit" className="w-100 mt-4">
                   Register
                 </Button>

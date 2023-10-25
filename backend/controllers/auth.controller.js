@@ -2,6 +2,7 @@ const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const authenticator = require("otplib");
+const axios = require("axios");
 
 //for implementation of password strength
 const passwordValidator = require("password-validator");
@@ -85,6 +86,23 @@ exports.register = async (req, res) => {
         success: false,
       });
     }
+    // Check if the reCAPTCHA response is missing
+    if (!recaptchaResponse) {
+      return res.status(400).json({ message: "Please complete the reCAPTCHA challenge.", success: false });
+    }
+
+    // Validate the reCAPTCHA response with Google's reCAPTCHA service
+    const verificationURL = `https://www.google.com/recaptcha/api/siteverify?secret=6LffvsIoAAAAAHv9CmIzjcplzZRYmVGCiquxUvm8&response=${recaptchaResponse}`;
+    const recaptchaVerificationResponse = await axios.post(verificationURL);
+   // console.log(verificationURL);
+   // console.log(recaptchaResponse);
+    if (!recaptchaVerificationResponse.data.success) {
+      return res.status(400).json({ message: "reCAPTCHA verification failed.", success: false });
+    }
+
+    
+
+
 
     //Generate a unique salt per user
     const salt = crypto.randomBytes(16).toString("hex");
