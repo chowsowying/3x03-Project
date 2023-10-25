@@ -119,13 +119,17 @@ const UpdateProduct = () => {
               .then((res) => {
                 dispatch(setLoading(false));
                 console.log("IMAGE UPLOAD RES DATA", res);
-                if (res.data.public_id && res.data.secure_url && res.data.secure_url.includes(res.data.public_id)) {
+                if (
+                  res.data.public_id &&
+                  res.data.secure_url &&
+                  res.data.secure_url.includes(res.data.public_id)
+                ) {
                   allUploadedFiles.push({
                     public_id: res.data.public_id,
                     url: res.data.secure_url,
                   });
-                setImages(allUploadedFiles);
-                toast.success("Image Uploaded");
+                  setImages(allUploadedFiles);
+                  toast.success("Image Uploaded");
                 }
               })
               .catch((err) => {
@@ -253,7 +257,7 @@ const UpdateProduct = () => {
                       Product Price
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       className="form-control"
                       id="price"
                       value={price}

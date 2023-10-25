@@ -2,7 +2,7 @@ const Product = require("../models/product.model");
 const User = require("../models/user.model");
 const slugify = require("slugify");
 const cloudinary = require("cloudinary").v2;
-const sanitizeHtml = require('sanitize-html');
+const sanitizeHtml = require("sanitize-html");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -17,7 +17,7 @@ const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
 function isValidTitleCheck(data) {
   if (
     data.title.trim() === "" ||
-    typeof data.title !== "string" || 
+    typeof data.title !== "string" ||
     forbiddenCharacters.test(data.title)
   ) {
     return false;
@@ -39,11 +39,7 @@ function isValidDescriptionCheck(data) {
 
 //Input Validation function check for price
 function isValidPriceCheck(data) {
-  if (
-    data.price.trim() === "" ||
-    data.price <= 0 ||
-    !priceRegex.test(data.price.toString())
-  ) {
+  if (data.price.trim() === "" || data.price <= 0 || !priceRegex.test(data.price.toString())) {
     return false;
   }
   return true;
@@ -57,14 +53,12 @@ exports.createProduct = async (req, res) => {
         message: "Invalid input data on title! Please no use $.{}",
         success: false,
       });
-    }
-    else if (!isValidDescriptionCheck(req.body)) {
+    } else if (!isValidDescriptionCheck(req.body)) {
       return res.status(400).json({
         message: "Invalid input data on description! Please no use $.{}",
         success: false,
       });
-    }
-    else if (!isValidPriceCheck(req.body)) {
+    } else if (!isValidPriceCheck(req.body)) {
       return res.status(400).json({
         message: "That is not a valid price!",
         success: false,
@@ -96,6 +90,7 @@ exports.createProduct = async (req, res) => {
       res.status(400).json({ message: "Product name already exists", success: false });
     } else {
       // Other errors
+      console.log(error);
       res.status(400).json({ message: "Failed to create product", success: false });
     }
   }
@@ -133,14 +128,12 @@ exports.updateProduct = async (req, res) => {
         message: "Invalid input data on title! Please no use $.{}",
         success: false,
       });
-    }
-    else if (!isValidDescriptionCheck(req.body)) {
+    } else if (!isValidDescriptionCheck(req.body)) {
       return res.status(400).json({
         message: "Invalid input data on description! Please no use $.{}",
         success: false,
       });
-    }
-    else if (!isValidPriceCheck(req.body)) {
+    } else if (!isValidPriceCheck(req.body)) {
       return res.status(400).json({
         message: "That is not a valid price!",
         success: false,
@@ -149,7 +142,7 @@ exports.updateProduct = async (req, res) => {
     //sanitise the input data
     req.body.title = sanitizeHtml(req.body.title);
     req.body.description = sanitizeHtml(req.body.description);
-    
+
     // Get title from request body and slugify it
     if (req.body.title) {
       req.body.slug = slugify(req.body.title);
