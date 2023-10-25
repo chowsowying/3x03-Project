@@ -257,7 +257,7 @@ const UpdateProduct = () => {
                       Product Price
                     </label>
                     <input
-                      type="text"
+                      type="Number"
                       className="form-control"
                       id="price"
                       value={price}
