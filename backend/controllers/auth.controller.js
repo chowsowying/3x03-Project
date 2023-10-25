@@ -96,9 +96,7 @@ exports.register = async (req, res) => {
     }
 
     //Hash password
-    const hashedPassword = crypto
-      .pbkdf2Sync(preHashedPassword, salt, 600000, 64, "sha256")
-      .toString("hex");
+    const hashedPassword = crypto.pbkdf2Sync(preHashedPassword, salt, 600000, 64, "sha256").toString("hex");
 
     // Generate a TOTP secret and OTPAuth URL for the user
     // TODO: Test this function
