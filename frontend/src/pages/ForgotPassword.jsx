@@ -26,6 +26,7 @@ const ForgotPassword = () => {
         return;
       }
 
+      // Send request to backend
       const response = await fetch("http://localhost:4000/api/forgot-password", {
         method: "POST",
         headers: {

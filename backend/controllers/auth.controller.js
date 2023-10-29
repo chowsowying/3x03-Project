@@ -1,7 +1,7 @@
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const authenticator = require("otplib");
+const otplib = require("otplib");
 
 //for implementation of password strength
 const passwordValidator = require("password-validator");
@@ -34,11 +34,10 @@ function isValidEmail(email) {
   return emailRegex.test(email);
 }
 
-// Function to generate a TOTP secret and QR code URL based on username
-// TODO: Test this function
-function generateTotpSecret(username) {
+// Function to generate a TOTP secret and QR code URL based on email
+function generateTotpSecret(email) {
   const secret = otplib.authenticator.generateSecret();
-  const otpauth_url = otplib.authenticator.keyuri(username, "ThirdLife 2FA", secret);
+  const otpauth_url = otplib.authenticator.keyuri(email, "ThirdLife 2FA", secret);
   return { secret, otpauth_url };
 }
 
@@ -99,8 +98,7 @@ exports.register = async (req, res) => {
     const hashedPassword = crypto.pbkdf2Sync(preHashedPassword, salt, 600000, 64, "sha256").toString("hex");
 
     // Generate a TOTP secret and OTPAuth URL for the user
-    // TODO: Test this function
-    // const { secret, otpauth_url } = generateTotpSecret(username);
+    const { secret, otpauth_url } = generateTotpSecret(email);
 
     //Create new user
     await User.create({
@@ -108,28 +106,23 @@ exports.register = async (req, res) => {
       email: req.body.email,
       salt: salt,
       password: hashedPassword,
-      // secret: secret,
+      secret: secret,
     });
 
-    res.status(201).json({ message: "User registered successfully.", success: true });
+    console.log("otp auth url: " + otpauth_url);
+
+    res.status(201).json({ message: "User registered successfully. Scan the QR code with a 2FA app to enable two-factor authentication.", success: true, qrCode: otpauth_url });
+
+  // TODO: This code isn't needed any more but if I remove it the ide keeps complaining about missing brackets
+  // Generate QR code image from the OTPAuth URL
+    qrcode.toDataURL(otpauth_url, (err, data_url) => {
+      if (err) {
+        return res.status(500).json({ message: 'Error generating QR code.', success: false });
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: "Failed to register user.", success: false });
   }
-
-  // Generate QR code image from the OTPAuth URL
-  // TODO: Test this function
-  //   qrcode.toDataURL(otpauth_url, (err, data_url) => {
-  //     if (err) {
-  //       return res.status(500).json({ message: 'Error generating QR code.', success: false });
-  //     }
-
-  //   //Send response
-  //   res.status(201).json({ message: "User registered successfully. Scan the QR code with a 2FA app to enable two-factor authentication.", success: true, qrCode: data_url });
-  //   //TODO: Redirect the user to the QR Code page
-  //   });
-  // } catch (error) {
-  //   res.status(500).json({ message: "Failed to register user.", success: false });
-  // }
 };
 
 // Function to login user
@@ -247,18 +240,17 @@ exports.forgotPassword = async (req, res) => {
 };
 
 // Function for reset password
-// TODO: Test this whole function
 exports.resetPassword = async (req, res) => {
-  const { otp, newpassword, confirmpassword } = req.body;
+  const { otp, newPassword, confirmPassword, resetToken } = req.body;
 
   try {
     // Check that the new password is provided
-    if (!newpassword) {
+    if (!newPassword) {
       return res.status(400).json({ message: "Please provide a new password.", success: false });
     }
 
     // Check that the new password meets the strength criteria
-    if (!schema.validate(newpassword)) {
+    if (!schema.validate(newPassword)) {
       return res.status(400).json({
         message:
           "Password does not meet the required strength criteria. Password should contains 15-64 characters, at least 1 special character, 1 capital letter and 1 number.",
@@ -267,7 +259,7 @@ exports.resetPassword = async (req, res) => {
     }
 
     // Check that the new password and confirm password fields match
-    if (newpassword !== confirmpassword) {
+    if (newPassword !== confirmPassword) {
       return res.status(400).json({
         message: "New password and confirm password fields do not match.",
         success: false,
@@ -286,23 +278,12 @@ exports.resetPassword = async (req, res) => {
     }
 
     // Check if the password meets the strength criteria
-    if (!schema.validate(req.body.password)) {
+    if (!schema.validate(newPassword)) {
       return res.status(400).json({
         message:
           "Password does not meet the required strength criteria. Password should contains 15-64 characters, at least 1 special character, 1 capital letter and 1 number.",
         success: false,
       });
-    }
-
-    // Retrieve the reset token from the URL and find the user with the matching reset token
-    const resetToken = req.query.resetToken;
-
-    // For testing, set the reset token to a placeholder value if it's not provided
-    // TODO: Redirect the user back to the forgot password page if the reset token is not provided
-    // (i.e. if the user manually browses to the reset password page)
-    if (!resetToken) {
-      resetToken = "iamnotarealtoken";
-      //return res.status(400).json({ message: "A valid reset token is required.", success: false });
     }
 
     const user = await User.findOne({ resetToken: resetToken });
@@ -312,22 +293,21 @@ exports.resetPassword = async (req, res) => {
       // Retrieve the user's secret from the database
       const secret = user.secret;
 
-      // Generate the expected OTP based on the secret and current timestamp
-      const expectedOTP = authenticator.generate(secret);
+      // Compare the provided OTP using otplib again
+      const isValid = otplib.authenticator.check(otp, secret);
 
       // Check if the provided OTP matches the one generated by the server
-      if (otp === expectedOTP) {
+      if (isValid) {
         // Valid OTP, proceed to reset the password
-
         // Pre-hash the password if it's longer than the block size
-        let preHashedPassword = req.body.newpassword;
+        let preHashedPassword = newPassword;
         if (preHashedPassword.length > 64) {
-          preHashedPassword = crypto.createHash("sha256").update(req.body.password).digest("hex");
+          preHashedPassword = crypto.createHash("sha256").update(newPassword).digest("hex");
         }
 
         //Hash password
         const hashedPassword = crypto
-          .pbkdf2Sync(preHashedPassword, salt, 600000, 64, "sha256")
+          .pbkdf2Sync(preHashedPassword, user.salt, 600000, 64, "sha256")
           .toString("hex");
 
         // Update the user's password and reset token fields in the database

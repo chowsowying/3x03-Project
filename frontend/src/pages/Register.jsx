@@ -5,12 +5,14 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { RegisterUser } from "../api/authAPI";
 import { setLoading } from "../redux/loaderSlice";
+import QRCode from "qrcode.react";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState("weak");
+  const [qrCodeData, setQrCodeData] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -28,8 +30,7 @@ const Register = () => {
 
     if (isLengthValid && hasSpecialChar && hasCapitalLetter && hasNumber) {
       setPasswordStrength("strong");
-    } else if ((isLengthValid && hasSpecialChar && hasNumber)
-    ) {
+    } else if ((isLengthValid && hasSpecialChar && hasNumber)) {
       setPasswordStrength("medium");
     } else {
       setPasswordStrength("weak");
@@ -43,7 +44,11 @@ const Register = () => {
       dispatch(setLoading(true));
       const response = await RegisterUser(name, email, password);
       dispatch(setLoading(false));
-      toast.success(response.data.message);
+      if (response.status === 201) {
+        setQrCodeData(response.data.qrCode);
+      } else {
+        toast.success(response.data.message);
+      }
     } catch (error) {
       dispatch(setLoading(false));
       toast.error(error.response.data.message);
@@ -99,6 +104,11 @@ const Register = () => {
                   </p>
                 </div>
               </Form>
+              {qrCodeData && (
+                <div className="text-center mt-4">
+                  <QRCode value={qrCodeData} />
+                </div>
+              )}
             </div>
           </div>
         </Col>

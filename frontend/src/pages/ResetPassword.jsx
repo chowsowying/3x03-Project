@@ -1,30 +1,68 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../redux/loaderSlice";
 
-//TODO: Prevent the user from accessing this page if no email parameter is present in the URL
+// TODO: Prevent the user from accessing this page if no resetToken parameter is present in the URL
+// Although it would never succeed anyway
 
 const ResetPassword = () => {
     // States
     const [otp, setOtp] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    // Retrieve resetToken from URL
+    const location = useLocation();
+    const resetToken = new URLSearchParams(location.search).get("resetToken");
 
     // Declare variables
     const dispatch = useDispatch();
 
     // Function: Reset password
-    // TODO: Fix the linking of frontend to backend
+    // TODO: Fix redirect after successful password reset
     const handleSubmit = async (ev) => {
         ev.preventDefault();
-        if (otp.length !== 6 || !/^\d+$/.test(otp)) {
-            toast.error("OTP must be 6 digits long and contain only numbers");
-            return;
+
+        try {
+            // Basic validation
+            dispatch(setLoading(true));
+            if (otp.length !== 6 || !/^\d+$/.test(otp)) {
+                toast.error("OTP must be 6 digits long and contain only numbers");
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                toast.error("Passwords do not match");
+                return;
+            }
+
+            // Send request to backend
+            const response = await fetch("http://localhost:4000/api/reset-password", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ otp, newPassword, confirmPassword, resetToken }),
+            });
+
+            dispatch(setLoading(false));
+
+            if (response.ok) {
+                toast.success("Password reset successfully.");
+                // TODO: There is a toast that says password reset failed even though it succeeded, remove it
+                // TODO: This redirect doesn't work, fix it
+                navigate("/login");
+            } else {
+                toast.error(response.data.message);
+            }
+
+        } catch (error) {
+            dispatch(setLoading(false));
+            toast.error("Failed to reset password.");
         }
-        dispatch(setLoading(true));
-        // Call API to reset password
-        dispatch(setLoading(false));
+
     };
 
     return (
@@ -48,6 +86,8 @@ const ResetPassword = () => {
                                 <Form.Group controlId="newpassword">
                                     <Form.Control
                                         type="password"
+                                        value={newPassword}
+                                        onChange={(ev) => setNewPassword(ev.target.value)}
                                         placeholder="New Password"
                                         className="mt-4"
                                     />
@@ -55,6 +95,8 @@ const ResetPassword = () => {
                                 <Form.Group controlId="confirmpassword">
                                     <Form.Control
                                         type="password"
+                                        value={confirmPassword}
+                                        onChange={(ev) => setConfirmPassword(ev.target.value)}
                                         placeholder="Confirm Password"
                                         className="mt-4"
                                     />
