@@ -75,7 +75,7 @@ exports.register = async (req, res) => {
     if (user) {
       return res.status(400).json({ message: "This email already exists.", success: false });
     }
-
+    
     // Check if the password meets the strength criteria
     if (!schema.validate(req.body.password)) {
       return res.status(400).json({
@@ -109,17 +109,7 @@ exports.register = async (req, res) => {
       secret: secret,
     });
 
-    console.log("otp auth url: " + otpauth_url);
-
     res.status(201).json({ message: "User registered successfully. Scan the QR code with a 2FA app to enable two-factor authentication.", success: true, qrCode: otpauth_url });
-
-  // TODO: This code isn't needed any more but if I remove it the ide keeps complaining about missing brackets
-  // Generate QR code image from the OTPAuth URL
-    qrcode.toDataURL(otpauth_url, (err, data_url) => {
-      if (err) {
-        return res.status(500).json({ message: 'Error generating QR code.', success: false });
-      }
-    });
   } catch (error) {
     res.status(500).json({ message: "Failed to register user.", success: false });
   }
