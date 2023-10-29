@@ -45,7 +45,6 @@ const ForgotPassword = () => {
       } else {
         // Handle the case where the response status is not ok (e.g., 400, 500)
         toast.error("Failed to initiate the password reset process.");
-
       }
     } catch (error) {
       dispatch(setLoading(false));
@@ -57,9 +56,9 @@ const ForgotPassword = () => {
     <Container fluid className="bg-primary login-container-height">
       <Row>
         <Col sm={9} md={7} lg={5} className="mx-auto">
-          <div class="card border-0 shadow rounded-3 my-5 ">
-            <div class="card-body p-4 p-sm-5">
-              <h5 class="card-title text-center mb-5 fw-medium fs-5">Forgot Password</h5>
+          <div className="card border-0 shadow rounded-3 my-5 ">
+            <div className="card-body p-4 p-sm-5">
+              <h5 className="card-title text-center mb-5 fw-medium fs-5">Forgot Password</h5>
               <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="email">
                   <Form.Control
@@ -75,7 +74,7 @@ const ForgotPassword = () => {
                   Reset Password
                 </Button>
 
-                <hr class="my-4" />
+                <hr className="my-4" />
                 {/* Login */}
                 <div className="text-center">
                   <p className="mt-3">

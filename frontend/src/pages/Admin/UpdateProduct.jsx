@@ -183,11 +183,11 @@ const UpdateProduct = () => {
     <Container fluid>
       <Row>
         <Col lg={12} className="bg-custom p-4 overflow-auto admin-container-height ">
-          <div class="card shadow border-0 mb-7 p-3">
-            <div class="card-header">
-              <h5 class="mb-0">Update Product</h5>
+          <div className="card shadow border-0 mb-7 p-3">
+            <div className="card-header">
+              <h5 className="mb-0">Update Product</h5>
             </div>
-            <div class="card-body">
+            <div className="card-body">
               <div className="d-flex flex-wrap mb-4">
                 {images && (
                   <div className="d-flex flex-wrap gap-4 my-4">

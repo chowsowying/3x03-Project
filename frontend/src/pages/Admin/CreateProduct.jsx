@@ -99,7 +99,7 @@ const CreateProduct = () => {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const fileExtension = file.name.split(".").pop().toLowerCase();
-        const filename = file.name.replace(/\.[^/.]+$/, '');
+        const filename = file.name.replace(/\.[^/.]+$/, "");
 
         //Check filename length
         if (filename.length > maxFilenameLength) {
@@ -144,13 +144,17 @@ const CreateProduct = () => {
               .then((res) => {
                 dispatch(setLoading(false));
                 console.log("IMAGE UPLOAD RES DATA", res);
-                if (res.data.public_id && res.data.secure_url && res.data.secure_url.includes(res.data.public_id)) {
+                if (
+                  res.data.public_id &&
+                  res.data.secure_url &&
+                  res.data.secure_url.includes(res.data.public_id)
+                ) {
                   allUploadedFiles.push({
                     public_id: res.data.public_id,
                     url: res.data.secure_url,
                   });
-                setImages(allUploadedFiles);
-                toast.success("Image Uploaded");
+                  setImages(allUploadedFiles);
+                  toast.success("Image Uploaded");
                 }
               })
               .catch((err) => {
@@ -170,11 +174,11 @@ const CreateProduct = () => {
     <Container fluid>
       <Row>
         <Col lg={12} className="bg-custom p-4 overflow-auto admin-container-height ">
-          <div class="card shadow border-0 mb-7 p-3">
-            <div class="card-header">
-              <h5 class="mb-0">Create Product</h5>
+          <div className="card shadow border-0 mb-7 p-3">
+            <div className="card-header">
+              <h5 className="mb-0">Create Product</h5>
             </div>
-            <div class="card-body">
+            <div className="card-body">
               <div className="d-flex flex-wrap mb-4">
                 {images && (
                   <div className="d-flex flex-wrap gap-4 my-4">

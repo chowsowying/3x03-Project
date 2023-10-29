@@ -46,8 +46,8 @@ const Products = () => {
     <Container fluid>
       <Row>
         <Col lg={12} className="bg-custom p-4 overflow-auto admin-container-height">
-          <div class="card shadow border-0 mb-7 p-3">
-            <div class="card-header">
+          <div className="card shadow border-0 mb-7 p-3">
+            <div className="card-header">
               <div className="d-flex justify-content-between align-items-center">
                 <h5>All Products</h5>
                 <a href="/admin/create-product" className="btn btn-primary">
@@ -55,9 +55,9 @@ const Products = () => {
                 </a>
               </div>
             </div>
-            <div class="table-responsive">
-              <table class="table table-hover table-nowrap">
-                <thead class="thead-light">
+            <div className="table-responsive">
+              <table className="table table-hover table-nowrap">
+                <thead className="thead-light">
                   <tr>
                     <th>#</th>
                     <th>Image</th>
