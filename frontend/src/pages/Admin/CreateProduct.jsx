@@ -89,7 +89,8 @@ const CreateProduct = () => {
   //Function: Upload Image
   const handleImageUpload = (ev) => {
     const allowedExtensions = ["jpg", "jpeg", "png"];
-    const maxFileSize = 10 * 1024 * 1024; // 10MB
+    const maxFileSize = 200 * 1024; // 200KB
+    const maxFilenameLength = 30;
     let files = ev.target.files;
     let allUploadedFiles = values.images;
     // Resize Images
@@ -98,6 +99,14 @@ const CreateProduct = () => {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const fileExtension = file.name.split(".").pop().toLowerCase();
+        const filename = file.name.replace(/\.[^/.]+$/, '');
+
+        //Check filename length
+        if (filename.length > maxFilenameLength) {
+          console.error("Filename is too long");
+          toast.error("Filename is too long");
+          continue;
+        }
 
         //Does not allow multiple extension
         if (file.name.split(".").length > 2) {
@@ -107,14 +116,14 @@ const CreateProduct = () => {
         }
         //Extension not .png, .jpg or .jpeg
         if (!allowedExtensions.includes(fileExtension)) {
-          console.error("Invalid file extension");
-          toast.error("Invalid file extension");
+          console.error("Invalid file extension, only accept png, jpg, jpeg.");
+          toast.error("Invalid file extension, only accept png, jpg, jpeg.");
           continue;
         }
-        //File size must be below 10MB
+        //File size must be below 200kb
         if (file.size > maxFileSize) {
-          console.error("File size too large");
-          toast.error("File size too large");
+          console.error("File size too large, must be 200kb or less.");
+          toast.error("File size too large, must be 200kb or less.");
           continue;
         }
 
