@@ -10,7 +10,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const allowedCharacters = /^[a-zA-Z0-9_\-]+$/;
+const allowedCharacters = /^[^\$.\{\}=;]+$/;
 const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
 
 //Input Validation function check for title
