@@ -50,12 +50,12 @@ exports.createProduct = async (req, res) => {
     //Input Validation function call for title
     if (!isValidTitleCheck(req.body)) {
       return res.status(400).json({
-        message: "Invalid input data on title! Please no use $.{}=",
+        message: "Invalid input data on title! Please no use $.{}=;",
         success: false,
       });
     } else if (!isValidDescriptionCheck(req.body)) {
       return res.status(400).json({
-        message: "Invalid input data on description! Please no use $.{}=",
+        message: "Invalid input data on description! Please no use $.{}=;",
         success: false,
       });
     } else if (!isValidPriceCheck(req.body)) {
@@ -125,12 +125,12 @@ exports.updateProduct = async (req, res) => {
     //Input Validation function call for title
     if (!isValidTitleCheck(req.body)) {
       return res.status(400).json({
-        message: "Invalid input data on title! Please no use $.{}=",
+        message: "Invalid input data on title! Please no use $.{}=;",
         success: false,
       });
     } else if (!isValidDescriptionCheck(req.body)) {
       return res.status(400).json({
-        message: "Invalid input data on description! Please no use $.{}=",
+        message: "Invalid input data on description! Please no use $.{}=;",
         success: false,
       });
     } else if (!isValidPriceCheck(req.body)) {
