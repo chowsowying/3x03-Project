@@ -6,7 +6,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 export const RegisterUser = async (name, email, password,recaptchaResponse) => {
   const url = `${import.meta.env.VITE_APP_API}/register`;
-  const data = { name, email, password, recaptchaResponse };
+  const data = { name, email, password,recaptchaResponse};
   return await axios.post(url, data);
 };
 

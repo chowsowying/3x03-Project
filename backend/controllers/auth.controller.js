@@ -4,11 +4,13 @@ const crypto = require("crypto");
 const authenticator = require("otplib");
 const axios = require("axios");
 
+require('dotenv').config();
+
 //for implementation of password strength
 const passwordValidator = require("password-validator");
 const schema = new passwordValidator();
 
-require('dotenv').config();
+
 
 //password strength requirements
 schema
@@ -64,7 +66,7 @@ const verifyRecaptcha = async (recaptchaResponse) => {
 //Fucntion to register user
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, recaptchaResponse } = req.body;
 
     // Check if the name is missing
     if (!name) {
@@ -104,12 +106,11 @@ exports.register = async (req, res) => {
         success: false,
       });
     }
-       // Verify reCAPTCHA
-       const isRecaptchaValid = await verifyRecaptcha(recaptchaResponse);
-
-       if (!isRecaptchaValid) {
-         return res.status(400).json({ message: "reCAPTCHA verification failed.", success: false });
-       }
+     // Verify reCAPTCHA
+    const isRecaptchaValid = await verifyRecaptcha(recaptchaResponse);
+    if (!isRecaptchaValid) {
+      return res.status(400).json({ message: "reCAPTCHA verification failed.", success: false });
+    }
 
     //Generate a unique salt per user
     const salt = crypto.randomBytes(16).toString("hex");

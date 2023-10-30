@@ -12,6 +12,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState("weak");
+  const [recaptchaResponse, setRecaptchaResponse] = useState(null);  
 
   const dispatch = useDispatch();
 
@@ -48,7 +49,8 @@ const Register = () => {
     ev.preventDefault();
     try {
       dispatch(setLoading(true));
-      const response = await RegisterUser(name, email, password);
+      const response = await RegisterUser(name, email, password, recaptchaResponse);
+      console.log(recaptchaResponse);
       dispatch(setLoading(false));
       toast.success(response.data.message);
     } catch (error) {
