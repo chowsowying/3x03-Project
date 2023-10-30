@@ -97,7 +97,7 @@ const Register = () => {
                   <div className={`strength-bar strength-${passwordStrength}`}></div>
                 </Form.Group>
                 <ReCAPTCHA
-                    sitekey="6LffvsIoAAAAABex3MhobFX_6so-zEAwggYwKBjs"
+                    sitekey={import.meta.env.VITE_RECAPTCHA_CLIENT_KEY}
                     onChange={handleRecaptchaChange}
                   />
                 <Button variant="primary" type="submit" className="w-100 mt-4">
