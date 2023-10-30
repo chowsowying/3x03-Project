@@ -37,11 +37,7 @@ pipeline {
 	post {
 		success {
 			dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-		}
-    success {
 			echo "Unit testing success"
-		}
-    success {
 			echo "Time to Deploy :D"
 		}
 	}
