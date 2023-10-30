@@ -29,7 +29,6 @@ pipeline {
     stage('Unit Test') {
 			steps {
 				echo 'Doing Unit testing, npm test, on local environment as npm test does not work unless the project is deployed'
-        }
 			}
 		}
 	}	
