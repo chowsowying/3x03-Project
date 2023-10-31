@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux";
 import { RegisterUser } from "../api/authAPI";
 import { setLoading } from "../redux/loaderSlice";
 import QRCode from "qrcode.react";
+import ReCAPTCHA from "react-google-recaptcha"; // Import reCAPTCHA component
+
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -13,6 +15,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState("weak");
   const [qrCodeData, setQrCodeData] = useState(null);
+  const [recaptchaResponse, setRecaptchaResponse] = useState(null);  
 
   const dispatch = useDispatch();
 
@@ -37,12 +40,19 @@ const Register = () => {
     }
   };
 
+    // Function to handle reCAPTCHA response
+    const handleRecaptchaChange = (value) => {
+      // Set the reCAPTCHA response in the state
+        setRecaptchaResponse(value);
+    };
+
   // Function: Register user
   const handleSubmit = async (ev) => {
     ev.preventDefault();
     try {
       dispatch(setLoading(true));
-      const response = await RegisterUser(name, email, password);
+      const response = await RegisterUser(name, email, password, recaptchaResponse);
+      console.log(recaptchaResponse);
       dispatch(setLoading(false));
       if (response.status === 201) {
         toast.success(response.data.message);
@@ -95,6 +105,10 @@ const Register = () => {
                   />
                   <div className={`strength-bar strength-${passwordStrength}`}></div>
                 </Form.Group>
+                <ReCAPTCHA
+                    sitekey={import.meta.env.VITE_RECAPTCHA_CLIENT_KEY}
+                    onChange={handleRecaptchaChange}
+                  />
                 <Button variant="primary" type="submit" className="w-100 mt-4">
                   Register
                 </Button>

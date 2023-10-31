@@ -38,13 +38,13 @@ const Users = () => {
     <Container fluid>
       <Row>
         <Col lg={12} className="bg-custom p-4 overflow-auto admin-container-height ">
-          <div class="card shadow border-0 mb-7 p-3">
-            <div class="card-header">
-              <h5 class="mb-0">All Users</h5>
+          <div className="card shadow border-0 mb-7 p-3">
+            <div className="card-header">
+              <h5 className="mb-0">All Users</h5>
             </div>
-            <div class="table-responsive">
-              <table class="table table-hover table-nowrap">
-                <thead class="thead-light">
+            <div className="table-responsive">
+              <table className="table table-hover table-nowrap">
+                <thead className="thead-light">
                   <tr>
                     <th>#</th>
                     <th>Name</th>

@@ -5,6 +5,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Order = require("../models/order.model");
 const Form = require("../models/form.model");
 const crypto = require("crypto");
+const sanitizeHtml = require("sanitize-html");
 
 
 
@@ -39,6 +40,20 @@ function isValidEmail(email) {
   return emailRegex.test(email);
 }
 
+function isValidTitle(title) {
+  const titleRegex = /^[A-Za-z\s0-9]+$/;
+  return titleRegex.test(title);
+}
+
+function isValidDescription(description) {
+  const descriptionRegex = /^[A-Za-z\s0-9]+$/;
+  return descriptionRegex.test(description);
+}
+
+function isValidAddress(address) {
+  const addressRegex = /^[^\$.\{\}=;]+$/;
+  return addressRegex.test(address);
+}
 
 
 // Function to get current user
@@ -108,7 +123,6 @@ exports.updateProfile = async (req, res) => {
     if (!isValidName(name)) {
       return res.status(400).json({ message: "Please provide a valid name.", success: false });
     }
-    
     // Validate email
     if (!email) {
       return res.status(400).json({ message: "Please fill in your email.", success: false });
@@ -135,6 +149,9 @@ exports.updateProfile = async (req, res) => {
         success: false,
       });
     }
+    req.body.name = sanitizeHtml(req.body.name);
+    req.body.email = sanitizeHtml(req.body.email);
+    req.body.password = sanitizeHtml(req.body.password);
 
     //Generate a unique salt per user
     const newSalt = crypto.randomBytes(16).toString("hex");
@@ -184,6 +201,21 @@ exports.updateProfile = async (req, res) => {
 // Function to create a form
 exports.contactAdmin = async (req, res) => {
   try {
+    const { title, description } = req.body;
+    if (!title) {
+      return res.status(400).json({ message: "Please fill in a valid title.", success: false });
+    }
+    if (!isValidTitle(title)) {
+      return res.status(400).json({ message: "Please provide a valid title, no special characters!", success: false });
+    }
+    if (!description) {
+      return res.status(400).json({ message: "Please fill in a valid description.", success: false });
+    }
+    if (!isValidDescription(description)) {
+      return res.status(400).json({ message: "Please provide a valid description, no special characters!", success: false });
+    }
+    req.body.title = sanitizeHtml(req.body.title);
+    req.body.description = sanitizeHtml(req.body.description);
     const newForm = await new Form(req.body).save();
     // Send response
     res.status(200).json({ 
@@ -286,6 +318,13 @@ exports.emptyUserCart = async (req, res) => {
 
 exports.saveAddress = async (req, res) => {
   try {
+    if (!req.body.address) {
+      return res.status(400).json({ message: "Please fill in an address to be delivered to.", success: false });
+    }
+    if (!isValidAddress(req.body.address)) {
+      return res.status(400).json({ message: "Please provide an address, no .$={};", success: false });
+    }
+    req.body.address = sanitizeHtml(req.body.address);
     // Find user and update address
     const userAddress = await User.findOneAndUpdate(
       { _id: req.userId },

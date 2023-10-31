@@ -107,16 +107,17 @@ const ResetPassword = () => {
                                     />
                                 </Form.Group>
 
-                                <Button variant="primary" type="submit" className="w-100 mt-4">
-                                    Reset Password
-                                </Button>
-                            </Form>
-                        </div>
-                    </div>
-                </Col>
-            </Row>
-        </Container>
-    );
+
+                <Button variant="primary" type="submit" className="w-100 mt-4">
+                  Reset Password
+                </Button>
+              </Form>
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </Container>
+  );
 };
 
 export default ResetPassword;

@@ -166,6 +166,7 @@ const Home = () => {
                   value={category}
                   checked={selectedCategory === category}
                   onChange={handleCategoryChange}
+                  key={category}
                 />
               ))}
               <div className="mb-2" style={{ fontSize: "24px", fontWeight: "bold" }}>
@@ -179,6 +180,7 @@ const Home = () => {
                   value={priceRange}
                   checked={selectedPrice === priceRange}
                   onChange={handlePriceChange}
+                  key={priceRange}
                 />
               ))}
               <div className="mb-2" style={{ fontSize: "24px", fontWeight: "bold" }}>
@@ -192,6 +194,7 @@ const Home = () => {
                   value={condition}
                   checked={selectedCondition === condition}
                   onChange={handleConditionChange}
+                  key={condition}
                 />
               ))}
               <button type="button" className="btn btn-danger mt-4 w-100" onClick={resetFilters}>
@@ -222,7 +225,7 @@ const Home = () => {
                   {/* Product Card */}
                   {products &&
                     products.map((product) => (
-                      <Col lg={3} md={6} className="mb-4">
+                      <Col lg={3} md={6} className="mb-4" key={product._id}>
                         <div className="card h-100" key={product._id}>
                           <img
                             src={

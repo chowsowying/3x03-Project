@@ -1,9 +1,12 @@
 // This file is used to make API calls to the backend for authentication
 import axios from "axios";
+//Google ReCAPTCHA
+import ReCAPTCHA from "react-google-recaptcha";
 
-export const RegisterUser = async (name, email, password) => {
+
+export const RegisterUser = async (name, email, password,recaptchaResponse) => {
   const url = `${import.meta.env.VITE_APP_API}/register`;
-  const data = { name, email, password };
+  const data = { name, email, password,recaptchaResponse};
   return await axios.post(url, data);
 };
 

@@ -73,7 +73,7 @@ const UpdateProduct = () => {
   //Function: Upload Image
   const handleImageUpload = (ev) => {
     const allowedExtensions = ["jpg", "jpeg", "png"];
-    const maxFileSize = 10 * 1024 * 1024; // 10MB
+    const maxFileSize = 10 * 1024 * 1024; // 200kb
     let files = ev.target.files;
     let allUploadedFiles = values.images;
     // Resize Images
@@ -85,20 +85,20 @@ const UpdateProduct = () => {
 
         //Does not allow multiple extension
         if (file.name.split(".").length > 2) {
-          console.error("File with multiple extensions not allowed");
-          toast.error("File with multiple extensions not allowed");
+          console.error("File with multiple extensions not allowed.");
+          toast.error("File with multiple extensions not allowed.");
           continue;
         }
         //Extension not .png, .jpg or .jpeg
         if (!allowedExtensions.includes(fileExtension)) {
-          console.error("Invalid file extension");
-          toast.error("Invalid file extension");
+          console.error("Invalid file extension, only accept png, jpg, jpeg.");
+          toast.error("Invalid file extension, only accept png, jpg, jpeg.");
           continue;
         }
-        //File size must be below 10MB
+        //File size must be below 200kb
         if (file.size > maxFileSize) {
-          console.error("File size too large");
-          toast.error("File size too large");
+          console.error("File size too large, must be 200kb or less.");
+          toast.error("File size too large, must be 200kb or less.");
           continue;
         }
 
@@ -183,11 +183,11 @@ const UpdateProduct = () => {
     <Container fluid>
       <Row>
         <Col lg={12} className="bg-custom p-4 overflow-auto admin-container-height ">
-          <div class="card shadow border-0 mb-7 p-3">
-            <div class="card-header">
-              <h5 class="mb-0">Update Product</h5>
+          <div className="card shadow border-0 mb-7 p-3">
+            <div className="card-header">
+              <h5 className="mb-0">Update Product</h5>
             </div>
-            <div class="card-body">
+            <div className="card-body">
               <div className="d-flex flex-wrap mb-4">
                 {images && (
                   <div className="d-flex flex-wrap gap-4 my-4">

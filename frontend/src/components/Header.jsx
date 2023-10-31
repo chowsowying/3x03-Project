@@ -9,10 +9,11 @@ import { setUser } from "../redux/userSlice";
 import { addToCart } from "../redux/cartSlice";
 import { GetSingleUser } from "../api/userAPI";
 import { FaUser } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Header = () => {
   // Declare variables
-  const [users, setUser] = useState([]);
+  const [username, setUsername] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
@@ -29,19 +30,18 @@ const Header = () => {
     navigate("/login");
   };
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await GetSingleUser(user.token);
-        dispatch(setUser(response.data));
-      } catch (error) {
-        toast.error(error.response.data.message);
-      }
-    };
-    // Fetch the user data when the component mounts and whenever user changes
-    if (user) {
-      fetchUser();
+  const fetchUserData = async () => {
+    try {
+      const response = await GetSingleUser(user.token);
+      console.log(response.data.name);
+      setUsername(response.data.name);
+    } catch (error) {
+      toast.error(error.response.data.message);
     }
+  };
+
+  useEffect(() => {
+    fetchUserData();
   }, [user]);
 
   return (
@@ -100,7 +100,7 @@ const Header = () => {
                 </Nav.Link>
 
                 <Nav.Link className="d-flex align-items-center gap-2">
-                  <FaUser /> {users.name && users.name}
+                  <FaUser /> {username && username}
                 </Nav.Link>
                 <button className="btn btn-danger" onClick={handleLogout}>
                   Logout

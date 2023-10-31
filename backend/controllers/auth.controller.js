@@ -2,6 +2,11 @@ const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const otplib = require("otplib");
+const authenticator = require("otplib");
+const axios = require("axios");
+const sanitizeHtml = require("sanitize-html");
+require("dotenv").config();
+
 
 //for implementation of password strength
 const passwordValidator = require("password-validator");
@@ -41,10 +46,25 @@ function generateTotpSecret(email) {
   return { secret, otpauth_url };
 }
 
+// reCAPTCHA Secret Key
+const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+
+// Verify reCAPTCHA
+const verifyRecaptcha = async (recaptchaResponse) => {
+  try {
+    const verificationURL = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaResponse}`;
+    const response = await axios.post(verificationURL);
+    const data = response.data;
+    return data.success; // Return whether reCAPTCHA verification succeeded
+  } catch (error) {
+    return false; // Handle network errors or other issues
+  }
+};
+
 //Fucntion to register user
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, recaptchaResponse } = req.body;
 
     // Check if the name is missing
     if (!name) {
@@ -84,6 +104,15 @@ exports.register = async (req, res) => {
         success: false,
       });
     }
+    // Verify reCAPTCHA
+    const isRecaptchaValid = await verifyRecaptcha(recaptchaResponse);
+    if (!isRecaptchaValid) {
+      return res.status(400).json({ message: "reCAPTCHA verification failed.", success: false });
+    }
+
+    req.body.name = sanitizeHtml(req.body.name);
+    req.body.email = sanitizeHtml(req.body.email);
+    req.body.password = sanitizeHtml(req.body.password);
 
     //Generate a unique salt per user
     const salt = crypto.randomBytes(16).toString("hex");
@@ -95,7 +124,9 @@ exports.register = async (req, res) => {
     }
 
     //Hash password
-    const hashedPassword = crypto.pbkdf2Sync(preHashedPassword, salt, 600000, 64, "sha256").toString("hex");
+    const hashedPassword = crypto
+      .pbkdf2Sync(preHashedPassword, salt, 600000, 64, "sha256")
+      .toString("hex");
 
     // Generate a TOTP secret and OTPAuth URL for the user
     const { secret, otpauth_url } = generateTotpSecret(email);
@@ -144,7 +175,9 @@ exports.login = async (req, res) => {
     }
 
     if (!user) {
-      return res.status(400).json({ message: "This email does not exist", success: false });
+      return res
+        .status(400)
+        .json({ message: "Please Enter a valid email/password.", success: false });
     }
 
     // Retrieve the user's secret from the database
@@ -160,20 +193,27 @@ exports.login = async (req, res) => {
         preHashedPassword = crypto.createHash("sha256").update(req.body.password).digest("hex");
       }
 
-      //hash the password with the per user salt stored in database
-      const hashedPassword = crypto
-        .pbkdf2Sync(preHashedPassword, user.salt, 600000, 64, "sha256")
-        .toString("hex");
 
-      //Verify the hashed password with the database password
-      if (hashedPassword !== user.password) {
-        return res.status(400).json({ message: "Password is incorrect.", success: false });
-      }
+    req.body.email = sanitizeHtml(req.body.email);
+    req.body.password = sanitizeHtml(req.body.password);
 
-      //Create Token
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
-      });
+    //hash the password with the per user salt stored in database
+    const hashedPassword = crypto
+      .pbkdf2Sync(preHashedPassword, user.salt, 600000, 64, "sha256")
+      .toString("hex");
+
+    //Verify the hashed password with the database password
+    if (hashedPassword !== user.password) {
+      return res
+        .status(400)
+        .json({ message: "Please Enter a valid email/password.", success: false });
+    }
+
+    //Create Token
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "15m",
+    });
+
 
       // Send response
       res.status(201).json({
@@ -228,6 +268,8 @@ exports.forgotPassword = async (req, res) => {
         .status(400)
         .json({ message: "Please provide a valid email address.", success: false });
     }
+    //sanitise and remove header
+    req.body.email = sanitizeHtml(req.body.email);
 
     // Generate a unique token for password reset
     const resetToken = crypto.randomBytes(32).toString("hex");
@@ -294,13 +336,15 @@ exports.resetPassword = async (req, res) => {
     }
 
     // Check if the password meets the strength criteria
-    if (!schema.validate(newPassword)) {
+    if (!schema.validate(req.body.newpassword)) {
       return res.status(400).json({
         message:
           "Password does not meet the required strength criteria. Password should contains 15-64 characters, at least 1 special character, 1 capital letter and 1 number.",
         success: false,
       });
     }
+    req.body.newpassword = sanitizeHtml(req.body.newpassword);
+    req.body.confirmpassword = sanitizeHtml(req.body.confirmpassword);
 
     const user = await User.findOne({ resetToken: resetToken });
 

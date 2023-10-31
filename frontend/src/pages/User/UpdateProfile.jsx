@@ -55,6 +55,8 @@ const UpdateProfile = () => {
     try {
       const response = await GetSingleUser(user.token);
       setUser(response.data);
+      setName(response.data.name);
+      setEmail(response.data.email);
     } catch (error) {
       toast.error(error.response.data.message);
     }
