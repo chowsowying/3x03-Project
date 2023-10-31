@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../redux/loaderSlice";
 const apiUrl = import.meta.env.VITE_APP_API;
 const forgotPasswordUrl = `${apiUrl}/forgot-password`;
@@ -14,6 +14,7 @@ const ForgotPassword = () => {
   // Declare variables
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.user);
 
   // Function: Forget password
   const handleSubmit = async (ev) => {
@@ -54,6 +55,10 @@ const ForgotPassword = () => {
       toast.error("Failed to initiate the password reset process.");
     }
   };
+
+  useEffect(() => {
+    if (user && user.token) navigate("/");
+  }, [user]);
 
   return (
     <Container fluid className="bg-primary login-container-height">
