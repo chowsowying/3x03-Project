@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../redux/loaderSlice";
+const apiUrl = import.meta.env.VITE_APP_API;
+const forgotPasswordUrl = `${apiUrl}/forgot-password`;
 
 const ForgotPassword = () => {
   // States
@@ -26,7 +28,8 @@ const ForgotPassword = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:4000/api/forgot-password", {
+      // Send request to backend
+      const response = await fetch(forgotPasswordUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
