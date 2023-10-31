@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const authenticator = require("otplib");
 const axios = require("axios");
+const sanitizeHtml = require("sanitize-html");
 
 require('dotenv').config();
 
@@ -112,6 +113,10 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: "reCAPTCHA verification failed.", success: false });
     }
 
+    req.body.name = sanitizeHtml(req.body.name);
+    req.body.email = sanitizeHtml(req.body.email);
+    req.body.password = sanitizeHtml(req.body.password);
+
     //Generate a unique salt per user
     const salt = crypto.randomBytes(16).toString("hex");
 
@@ -185,6 +190,9 @@ exports.login = async (req, res) => {
       preHashedPassword = crypto.createHash("sha256").update(req.body.password).digest("hex");
     }
 
+    req.body.email = sanitizeHtml(req.body.email);
+    req.body.password = sanitizeHtml(req.body.password);
+
     //hash the password with the per user salt stored in database
     const hashedPassword = crypto
       .pbkdf2Sync(preHashedPassword, user.salt, 600000, 64, "sha256")
@@ -245,6 +253,8 @@ exports.forgotPassword = async (req, res) => {
         .status(400)
         .json({ message: "Please provide a valid email address.", success: false });
     }
+    //sanitise and remove header
+    req.body.email = sanitizeHtml(req.body.email);
 
     // Generate a unique token for password reset
     const resetToken = crypto.randomBytes(32).toString("hex");
@@ -312,13 +322,15 @@ exports.resetPassword = async (req, res) => {
     }
 
     // Check if the password meets the strength criteria
-    if (!schema.validate(req.body.password)) {
+    if (!schema.validate(req.body.newpassword)) {
       return res.status(400).json({
         message:
           "Password does not meet the required strength criteria. Password should contains 15-64 characters, at least 1 special character, 1 capital letter and 1 number.",
         success: false,
       });
     }
+    req.body.newpassword = sanitizeHtml(req.body.newpassword);
+    req.body.confirmpassword = sanitizeHtml(req.body.confirmpassword);
 
     // Retrieve the reset token from the URL and find the user with the matching reset token
     const resetToken = req.query.resetToken;
