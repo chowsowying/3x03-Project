@@ -300,10 +300,6 @@ exports.forgotPassword = async (req, res) => {
 // Function for reset password
 exports.resetPassword = async (req, res) => {
   const { otp, newPassword, confirmPassword, resetToken } = req.body;
-  console.log("otp" + otp);
-  console.log("newPassword" + newPassword);
-  console.log("confirmPassword" + confirmPassword);
-  console.log("resetToken" + resetToken);
 
   try {
     // Check that the new password is provided
