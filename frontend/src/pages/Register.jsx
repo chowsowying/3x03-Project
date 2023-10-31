@@ -45,6 +45,7 @@ const Register = () => {
       const response = await RegisterUser(name, email, password);
       dispatch(setLoading(false));
       if (response.status === 201) {
+        toast.success(response.data.message);
         setQrCodeData(response.data.qrCode);
       } else {
         toast.success(response.data.message);
@@ -106,6 +107,7 @@ const Register = () => {
               </Form>
               {qrCodeData && (
                 <div className="text-center mt-4">
+                  <p>Please scan the above QR code with your 2FA app.</p>
                   <QRCode value={qrCodeData} />
                 </div>
               )}

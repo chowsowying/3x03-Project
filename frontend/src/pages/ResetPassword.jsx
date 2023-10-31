@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../redux/loaderSlice";
-
-// TODO: Prevent the user from accessing this page if no resetToken parameter is present in the URL
-// Although it would never succeed anyway
 
 const ResetPassword = () => {
     // States
@@ -18,10 +15,10 @@ const ResetPassword = () => {
     const resetToken = new URLSearchParams(location.search).get("resetToken");
 
     // Declare variables
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     // Function: Reset password
-    // TODO: Fix redirect after successful password reset
     const handleSubmit = async (ev) => {
         ev.preventDefault();
 
@@ -38,6 +35,7 @@ const ResetPassword = () => {
                 return;
             }
 
+            // TODO: Fix this to use authAPI.js instead
             // Send request to backend
             const response = await fetch("http://localhost:4000/api/reset-password", {
                 method: "POST",
@@ -51,9 +49,7 @@ const ResetPassword = () => {
 
             if (response.ok) {
                 toast.success("Password reset successfully.");
-                // TODO: There is a toast that says password reset failed even though it succeeded, remove it
-                // TODO: This redirect doesn't work, fix it
-                navigate("/login");
+                navigate(`/login`);
             } else {
                 toast.error(response.data.message);
             }
@@ -65,6 +61,13 @@ const ResetPassword = () => {
 
     };
 
+    // If resetToken is not present, redirect to forgot password page
+    useEffect(() => {
+        if (!resetToken) {
+            navigate(`/forgot-password`);
+        }
+    }, [resetToken, navigate]);
+
     return (
         <Container fluid className="bg-primary login-container-height">
             <Row>
@@ -75,7 +78,7 @@ const ResetPassword = () => {
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group controlId="otp">
                                     <Form.Control
-                                        type="text"
+                                        type="number"
                                         value={otp}
                                         onChange={(ev) => setOtp(ev.target.value)}
                                         placeholder="Enter OTP"
