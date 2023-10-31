@@ -300,6 +300,10 @@ exports.forgotPassword = async (req, res) => {
 // Function for reset password
 exports.resetPassword = async (req, res) => {
   const { otp, newPassword, confirmPassword, resetToken } = req.body;
+  console.log("otp" + otp);
+  console.log("newPassword" + newPassword);
+  console.log("confirmPassword" + confirmPassword);
+  console.log("resetToken" + resetToken);
 
   try {
     // Check that the new password is provided
@@ -336,7 +340,7 @@ exports.resetPassword = async (req, res) => {
     }
 
     // Check if the password meets the strength criteria
-    if (!schema.validate(req.body.newpassword)) {
+    if (!schema.validate(newPassword)) {
       return res.status(400).json({
         message:
           "Password does not meet the required strength criteria. Password should contains 15-64 characters, at least 1 special character, 1 capital letter and 1 number.",
