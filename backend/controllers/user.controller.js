@@ -318,10 +318,10 @@ exports.emptyUserCart = async (req, res) => {
 
 exports.saveAddress = async (req, res) => {
   try {
-    if (!address) {
+    if (!req.body.address) {
       return res.status(400).json({ message: "Please fill in an address to be delivered to.", success: false });
     }
-    if (!isValidAddress(address)) {
+    if (!isValidAddress(req.body.address)) {
       return res.status(400).json({ message: "Please provide an address, no .$={};", success: false });
     }
     req.body.address = sanitizeHtml(req.body.address);
