@@ -5,6 +5,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../redux/loaderSlice";
 
+const apiUrl = import.meta.env.VITE_APP_API;
+const resetPasswordUrl = `${apiUrl}/reset-password`;
+
 const ResetPassword = () => {
     // States
     const [otp, setOtp] = useState("");
@@ -35,9 +38,8 @@ const ResetPassword = () => {
                 return;
             }
 
-            // TODO: Fix this to use authAPI.js instead
             // Send request to backend
-            const response = await fetch("http://localhost:4000/api/reset-password", {
+            const response = await fetch(resetPasswordUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
