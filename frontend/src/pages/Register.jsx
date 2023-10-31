@@ -5,13 +5,16 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { RegisterUser } from "../api/authAPI";
 import { setLoading } from "../redux/loaderSlice";
+import QRCode from "qrcode.react";
 import ReCAPTCHA from "react-google-recaptcha"; // Import reCAPTCHA component
+
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState("weak");
+  const [qrCodeData, setQrCodeData] = useState(null);
   const [recaptchaResponse, setRecaptchaResponse] = useState(null);  
 
   const dispatch = useDispatch();
@@ -30,8 +33,7 @@ const Register = () => {
 
     if (isLengthValid && hasSpecialChar && hasCapitalLetter && hasNumber) {
       setPasswordStrength("strong");
-    } else if ((isLengthValid && hasSpecialChar && hasNumber)
-    ) {
+    } else if ((isLengthValid && hasSpecialChar && hasNumber)) {
       setPasswordStrength("medium");
     } else {
       setPasswordStrength("weak");
@@ -52,7 +54,12 @@ const Register = () => {
       const response = await RegisterUser(name, email, password, recaptchaResponse);
       console.log(recaptchaResponse);
       dispatch(setLoading(false));
-      toast.success(response.data.message);
+      if (response.status === 201) {
+        toast.success(response.data.message);
+        setQrCodeData(response.data.qrCode);
+      } else {
+        toast.success(response.data.message);
+      }
     } catch (error) {
       dispatch(setLoading(false));
       toast.error(error.response.data.message);
@@ -112,6 +119,12 @@ const Register = () => {
                   </p>
                 </div>
               </Form>
+              {qrCodeData && (
+                <div className="text-center mt-4">
+                  <p>Please scan the above QR code with your 2FA app.</p>
+                  <QRCode value={qrCodeData} />
+                </div>
+              )}
             </div>
           </div>
         </Col>

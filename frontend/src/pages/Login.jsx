@@ -11,6 +11,7 @@ const Login = () => {
   // States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
 
   // Declare variables
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const Login = () => {
     ev.preventDefault();
     try {
       dispatch(setLoading(true));
-      const response = await LoginUser(email, password);
+      const response = await LoginUser(email, password, otp);
       dispatch(setLoading(false));
       const { user } = response.data;
       // Store user data and token in local storage
@@ -69,6 +70,16 @@ const Login = () => {
                     onChange={(ev) => setPassword(ev.target.value)}
                     placeholder="Enter password"
                     className="mt-4"
+                  />
+                </Form.Group>
+                <Form.Group controlId="otp">
+                  <Form.Control
+                    type="number"
+                    value={otp}
+                    onChange={(ev) => setOtp(ev.target.value)}
+                    placeholder="Enter OTP"
+                    className="mt-4"
+                    maxLength={6}
                   />
                 </Form.Group>
 

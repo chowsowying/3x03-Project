@@ -10,9 +10,9 @@ export const RegisterUser = async (name, email, password,recaptchaResponse) => {
   return await axios.post(url, data);
 };
 
-export const LoginUser = async (email, password) => {
+export const LoginUser = async (email, password, otp) => {
   const url = `${import.meta.env.VITE_APP_API}/login`;
-  const data = { email, password };
+  const data = { email, password, otp };
   return await axios.post(url, data);
 };
 
