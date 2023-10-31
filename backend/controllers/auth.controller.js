@@ -5,13 +5,11 @@ const authenticator = require("otplib");
 const axios = require("axios");
 const sanitizeHtml = require("sanitize-html");
 
-require('dotenv').config();
+require("dotenv").config();
 
 //for implementation of password strength
 const passwordValidator = require("password-validator");
 const schema = new passwordValidator();
-
-
 
 //password strength requirements
 schema
@@ -63,7 +61,6 @@ const verifyRecaptcha = async (recaptchaResponse) => {
   }
 };
 
-
 //Fucntion to register user
 exports.register = async (req, res) => {
   try {
@@ -107,7 +104,7 @@ exports.register = async (req, res) => {
         success: false,
       });
     }
-     // Verify reCAPTCHA
+    // Verify reCAPTCHA
     const isRecaptchaValid = await verifyRecaptcha(recaptchaResponse);
     if (!isRecaptchaValid) {
       return res.status(400).json({ message: "reCAPTCHA verification failed.", success: false });
@@ -127,7 +124,9 @@ exports.register = async (req, res) => {
     }
 
     //Hash password
-    const hashedPassword = crypto.pbkdf2Sync(preHashedPassword, salt, 600000, 64, "sha256").toString("hex");
+    const hashedPassword = crypto
+      .pbkdf2Sync(preHashedPassword, salt, 600000, 64, "sha256")
+      .toString("hex");
 
     // Generate a TOTP secret and OTPAuth URL for the user
     // TODO: Test this function
@@ -181,7 +180,9 @@ exports.login = async (req, res) => {
     }
 
     if (!user) {
-      return res.status(400).json({ message: "This email does not exist", success: false });
+      return res
+        .status(400)
+        .json({ message: "Please Enter a valid email/password.", success: false });
     }
 
     //Pre-hash the provided password if it's longer than the block size
@@ -200,7 +201,9 @@ exports.login = async (req, res) => {
 
     //Verify the hashed password with the database password
     if (hashedPassword !== user.password) {
-      return res.status(400).json({ message: "Password is incorrect.", success: false });
+      return res
+        .status(400)
+        .json({ message: "Please Enter a valid email/password.", success: false });
     }
 
     //Create Token
