@@ -10,7 +10,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const allowedCharacters = /^[^\$.\{\}=;]+$/;
+const allowedCharactersTitle = /^[^\$.\{\}=;]{1,32}$/;
+const allowedCharactersDescription = /^[^\$.\{\}=;]{1,2000}$/;
 const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
 
 //Input Validation function check for title
@@ -18,7 +19,7 @@ function isValidTitleCheck(data) {
   if (
     data.title.trim() === "" ||
     typeof data.title !== "string" ||
-    !allowedCharacters.test(data.title)
+    !allowedCharactersTitle.test(data.title)
   ) {
     return false;
   }
@@ -30,7 +31,7 @@ function isValidDescriptionCheck(data) {
   if (
     data.description.trim() === "" ||
     typeof data.description !== "string" ||
-    !allowedCharacters.test(data.description)
+    !allowedCharactersDescription.test(data.description)
   ) {
     return false;
   }
@@ -39,7 +40,10 @@ function isValidDescriptionCheck(data) {
 
 //Input Validation function check for price
 function isValidPriceCheck(data) {
-  if (data.price.trim() === "" || data.price <= 0 || !priceRegex.test(data.price.toString())) {
+  if (data.price.trim() === "" ||
+  data.price <= 0 ||
+  !priceRegex.test(data.price.toString()) ||
+  price >= 100000) {
     return false;
   }
   return true;
@@ -50,17 +54,17 @@ exports.createProduct = async (req, res) => {
     //Input Validation function call for title
     if (!isValidTitleCheck(req.body)) {
       return res.status(400).json({
-        message: "Invalid input data on title! Please no use $.{}=;",
+        message: "Invalid input data on title! Max limit of 32 characters! Please no use $.{}=;",
         success: false,
       });
     } else if (!isValidDescriptionCheck(req.body)) {
       return res.status(400).json({
-        message: "Invalid input data on description! Please no use $.{}=;",
+        message: "Invalid input data on description! Max limit of 2000 characters! Please no use $.{}=;",
         success: false,
       });
     } else if (!isValidPriceCheck(req.body)) {
       return res.status(400).json({
-        message: "That is not a valid price!",
+        message: "That is not a valid price! Max of 2 decimal places. Product cannot be over $100,000.",
         success: false,
       });
     }
@@ -125,17 +129,17 @@ exports.updateProduct = async (req, res) => {
     //Input Validation function call for title
     if (!isValidTitleCheck(req.body)) {
       return res.status(400).json({
-        message: "Invalid input data on title! Please no use $.{}=;",
+        message: "Invalid input data on title! Max limit of 32 characters! Please no use $.{}=;",
         success: false,
       });
     } else if (!isValidDescriptionCheck(req.body)) {
       return res.status(400).json({
-        message: "Invalid input data on description! Please no use $.{}=;",
+        message: "Invalid input data on description! Max limit of 2000 characters! Please no use $.{}=;",
         success: false,
       });
     } else if (!isValidPriceCheck(req.body)) {
       return res.status(400).json({
-        message: "That is not a valid price!",
+        message: "That is not a valid price! Max of 2 decimal places. Product cannot be over $100,000.",
         success: false,
       });
     }

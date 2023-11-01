@@ -25,9 +25,8 @@ schema
   .digits(1) // At least 1 digit
   .has()
   .symbols(1)
-  .has()
   .not()
-  .space(); // At least 1 special character (!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~)
+  .spaces(); // At least 1 special character (!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~)
 
 // function to check for valid names to prevent SQL injection
 function isValidName(name) {

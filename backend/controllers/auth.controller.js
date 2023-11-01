@@ -38,21 +38,25 @@ schema
   .digits(1) // At least 1 digit
   .has()
   .symbols(1) // At least 1 special character (!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~)
-  .has()
   .not()
-  .space();
+  .spaces();
 
 // function to check for valid names to prevent SQL injection
 function isValidName(name) {
   // Use a regular expression to validate the name format (letters only)
-  const nameRegex = /^[A-Za-z\s]+$/; // Allow letters and spaces
+  const nameRegex = /^[A-Za-z\s]{1,64}$/; // Allow letters and spaces till 64 characters
   return nameRegex.test(name);
 }
 
 //function to check for valid email to prevent SQL injection
 function isValidEmail(email) {
   //Regular expression to validate the email format
-  const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z.-]+[A-Za-z]{2,4}$/;
+  /*
+    The local part (before the "@") can have 1 to 63 characters.
+    The total length can be up to 254 characters.
+    The domain part allows only letters, numbers, hyphens, and periods.
+  */
+  const emailRegex = /^[A-Za-z0-9._%-]{1,63}@[A-Za-z0-9.-]{1,254}\.[A-Za-z]{2,4}$/;
   return emailRegex.test(email);
 }
 
