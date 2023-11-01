@@ -115,3 +115,39 @@ exports.isUser = async (req, res, next) => {
     res.status(500).json({ message: error.message, success: false });
   }
 };
+
+// Add a Map to store the number of failed login attempts per IP
+const failedLoginAttempts = new Map();
+
+// Middleware to implement rate limiting
+exports.rateLimit = (req, res, next) => {
+  const clientIP = req.headers['x-real-ip']; // Assuming you have configured this header
+  const maxAttempts = 3; // Maximum allowed login attempts
+  const lockoutDuration = 15 * 60 * 1000; // Lockout duration in milliseconds (15 minutes)
+
+  // Check if the IP is in the failedLoginAttempts map
+  if (failedLoginAttempts.has(clientIP)) {
+    const attempts = failedLoginAttempts.get(clientIP);
+
+    if (attempts >= maxAttempts) {
+      // The IP has exceeded the maximum login attempts, lockout the IP
+      return res.status(429).json({
+        message: `Too many login attempts. Please try again after ${lockoutDuration / 1000} seconds.`,
+        success: false,
+      });
+    } else {
+      // Increment the failed attempts count
+      failedLoginAttempts.set(clientIP, attempts + 1);
+    }
+  } else {
+    // If the IP is not in the map, add it with 1 failed attempt
+    failedLoginAttempts.set(clientIP, 1);
+  }
+
+  // After the lockout duration, remove the IP from the map
+  setTimeout(() => {
+    failedLoginAttempts.delete(clientIP);
+  }, lockoutDuration);
+
+  next();
+};
