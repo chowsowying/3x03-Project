@@ -37,6 +37,7 @@ const userSchema = new mongoose.Schema(
       default: 0,
     },
     secret: String,
+    authTag: String,
     resetToken: String,
     resetTokenExpiry: Date,
   },
