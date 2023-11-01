@@ -163,7 +163,8 @@ exports.register = async (req, res) => {
 // Function to login user
 exports.login = async (req, res) => {
   try {
-    const { email, password, otp } = req.body;
+    const { email, password, otp, headers } = req.body;
+    const clientIP = req.headers['x-real-ip'];
 
     // Check if the email is missing
     if (!email) {
@@ -192,7 +193,7 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
-      logger.info(`[${Date.now()}] The following [${req.ip}] has attempted to login into a non-existing email: [${req.body.email}] through [${req.method}] request.`);
+      logger.info(`[${Date.now()}] The following [${clientIP}] has attempted to login into a non-existing email: [${req.body.email}] through [${req.method}] request.`);
       return res
         .status(400)
         .json({ message: "Please Enter a valid email/password.", success: false });
@@ -219,13 +220,13 @@ exports.login = async (req, res) => {
 
     //Verify the hashed password with the database password
     if (hashedPassword !== user.password) {
-      logger.info(`[${Date.now()}] The following [${req.ip}] has attempted to login into an existing email: [${req.body.email}] through [${req.method}] request.`);
+      logger.info(`[${Date.now()}] The following [${clientIP}] has attempted to login into an existing email: [${req.body.email}] through [${req.method}] request.`);
       return res
         .status(400)
         .json({ message: "Please Enter a valid email/password.", success: false });
     }
 
-    logger.info(`[${Date.now()}] The following [${req.ip}] has successfully logged into email: [${req.body.email}] through [${req.method}] request.`);
+    logger.info(`[${Date.now()}] The following [${clientIP}] has successfully logged into email: [${req.body.email}] through [${req.method}] request.`);
 
     //Create Token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
@@ -246,7 +247,7 @@ exports.login = async (req, res) => {
       });
 
     } else {
-      logger.info(`[${Date.now()}] The following [${req.ip}] has attempted to login into an existing email: [${req.body.email}] through [${req.method}] request.`);
+      logger.info(`[${Date.now()}] The following [${clientIP}] has attempted to login into an existing email: [${req.body.email}] through [${req.method}] request.`);
       // If the OTP is invalid, return a generic error message
       return res.status(400).json({
         message: "Failed to login user.",
