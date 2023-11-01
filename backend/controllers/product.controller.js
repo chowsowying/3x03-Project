@@ -10,8 +10,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const allowedCharactersTitle = /^[^\$.\{\}=;]{1,32}$/;
-const allowedCharactersDescription = /^[^\$.\{\}=;]{1,2000}$/;
+const allowedCharactersTitle = /^[^\$.\{\}=;\\p{Emoji}]{1,32}$/u;
+const allowedCharactersDescription = /^[^\$.\{\}=;\\p{Emoji}]{1,2000}$/u;
 const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
 
 //Input Validation function check for title
