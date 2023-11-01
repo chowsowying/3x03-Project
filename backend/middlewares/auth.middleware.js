@@ -32,29 +32,6 @@ exports.isAuth = async (req, res, next) => {
   }
 };
 
-// Middleware to check if the logged-in user is an admin
-exports.isAdmin = async (req, res, next) => {
-  try {
-    // Get userId from authCheck middleware
-    const userId = req.userId;
-
-    // Find user in database
-    const adminUser = await User.findById({ _id: userId }).exec();
-
-    // If user is not admin, send error
-    if (adminUser.role !== "admin") {
-      res.status(403).json({ err: "Admin resource. Access denied." });
-    } else {
-      // Execute next middleware
-      next();
-    }
-  } catch (error) {
-    // Handle the error
-    console.error(error);
-    res.status(500).json({ message: error.message, success: false });
-  }
-};
-
 // Middleware to check token expiration and blacklist
 exports.checkTokenValidity = async (req, res, next) => {
   const token = req.headers.authtoken;
@@ -90,6 +67,29 @@ exports.checkTokenValidity = async (req, res, next) => {
     next();
   } catch (error) {
     return res.status(401).json({ message: 'Invalid token. Please reauthenticate.', success: false });
+  }
+};
+
+// Middleware to check if the logged-in user is an admin
+exports.isAdmin = async (req, res, next) => {
+  try {
+    // Get userId from authCheck middleware
+    const userId = req.userId;
+
+    // Find user in database
+    const adminUser = await User.findById({ _id: userId }).exec();
+
+    // If user is not admin, send error
+    if (adminUser.role !== "admin") {
+      res.status(403).json({ err: "Admin resource. Access denied." });
+    } else {
+      // Execute next middleware
+      next();
+    }
+  } catch (error) {
+    // Handle the error
+    console.error(error);
+    res.status(500).json({ message: error.message, success: false });
   }
 };
 

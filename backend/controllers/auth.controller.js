@@ -6,6 +6,20 @@ const authenticator = require("otplib");
 const axios = require("axios");
 const sanitizeHtml = require("sanitize-html");
 require("dotenv").config();
+const { createLogger, format, transports } = require('winston');
+
+const logger = createLogger({
+  level: 'info',
+  format: format.combine(
+    format.timestamp(),
+    format.printf(({ message }) => {
+      return `${message}`;
+    })
+  ),
+  transports: [
+    new transports.File({ filename: 'login_activity.log' }),
+  ],
+});
 
 
 //for implementation of password strength
@@ -149,8 +163,6 @@ exports.register = async (req, res) => {
 // Function to login user
 exports.login = async (req, res) => {
   try {
-    //Check if user exists
-    const user = await User.findOne({ email: req.body.email });
     const { email, password, otp } = req.body;
 
     // Check if the email is missing
@@ -174,7 +186,13 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Please provide a valid OTP.", success: false });
     }
 
+    req.body.email = sanitizeHtml(req.body.email);
+    req.body.password = sanitizeHtml(req.body.password);
+
+    const user = await User.findOne({ email: req.body.email });
+
     if (!user) {
+      logger.info(`[${Date.now()}] The following [${req.ip}] has attempted to login into a non-existing email: [${req.body.email}] through [${req.method}] request.`);
       return res
         .status(400)
         .json({ message: "Please Enter a valid email/password.", success: false });
@@ -194,9 +212,6 @@ exports.login = async (req, res) => {
       }
 
 
-    req.body.email = sanitizeHtml(req.body.email);
-    req.body.password = sanitizeHtml(req.body.password);
-
     //hash the password with the per user salt stored in database
     const hashedPassword = crypto
       .pbkdf2Sync(preHashedPassword, user.salt, 600000, 64, "sha256")
@@ -204,16 +219,18 @@ exports.login = async (req, res) => {
 
     //Verify the hashed password with the database password
     if (hashedPassword !== user.password) {
+      logger.info(`[${Date.now()}] The following [${req.ip}] has attempted to login into an existing email: [${req.body.email}] through [${req.method}] request.`);
       return res
         .status(400)
         .json({ message: "Please Enter a valid email/password.", success: false });
     }
 
+    logger.info(`[${Date.now()}] The following [${req.ip}] has successfully logged into email: [${req.body.email}] through [${req.method}] request.`);
+
     //Create Token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "15m",
     });
-
 
       // Send response
       res.status(201).json({
@@ -229,6 +246,7 @@ exports.login = async (req, res) => {
       });
 
     } else {
+      logger.info(`[${Date.now()}] The following [${req.ip}] has attempted to login into an existing email: [${req.body.email}] through [${req.method}] request.`);
       // If the OTP is invalid, return a generic error message
       return res.status(400).json({
         message: "Failed to login user.",
