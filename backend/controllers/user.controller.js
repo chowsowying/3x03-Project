@@ -31,29 +31,29 @@ schema
 // function to check for valid names to prevent SQL injection
 function isValidName(name) {
   // Use a regular expression to validate the name format (letters only)
-  const nameRegex = /^[A-Za-z\s]+$/; // Allow letters and spaces
+  const nameRegex = /^[A-Za-z\s]{1,64}$/; // Allow letters and spaces
   return nameRegex.test(name);
 }
 
 //function to check for valid email to prevent SQL injection
 function isValidEmail(email) {
   //Regular expression to validate the email format
-  const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z.-]+[A-Za-z]{2,4}$/;
+  const emailRegex = /^[A-Za-z0-9._%-]{1,63}@[A-Za-z0-9.-]{1,254}\.[A-Za-z]{2,4}$/;
   return emailRegex.test(email);
 }
 
 function isValidTitle(title) {
-  const titleRegex = /^[A-Za-z\s0-9]+$/;
+  const titleRegex = /^[A-Za-z0-9\s]{1,32}$/;
   return titleRegex.test(title);
 }
 
 function isValidDescription(description) {
-  const descriptionRegex = /^[A-Za-z\s0-9]+$/;
+  const descriptionRegex = /^[A-Za-z0-9\s]{1,2000}$/;
   return descriptionRegex.test(description);
 }
 
 function isValidAddress(address) {
-  const addressRegex = /^[^\$.\{\}=;]+$/;
+  const addressRegex = /^(?!.*[$.=;{}]).{1,2000}$/;
   return addressRegex.test(address);
 }
 
@@ -208,13 +208,13 @@ exports.contactAdmin = async (req, res) => {
       return res.status(400).json({ message: "Please fill in a valid title.", success: false });
     }
     if (!isValidTitle(title)) {
-      return res.status(400).json({ message: "Please provide a valid title, no special characters!", success: false });
+      return res.status(400).json({ message: "Please provide a valid title, no special characters! Max 32 characters.", success: false });
     }
     if (!description) {
       return res.status(400).json({ message: "Please fill in a valid description.", success: false });
     }
     if (!isValidDescription(description)) {
-      return res.status(400).json({ message: "Please provide a valid description, no special characters!", success: false });
+      return res.status(400).json({ message: "Please provide a valid description, no special characters! Max 2000 characters.", success: false });
     }
     req.body.title = sanitizeHtml(req.body.title);
     req.body.description = sanitizeHtml(req.body.description);
@@ -324,7 +324,7 @@ exports.saveAddress = async (req, res) => {
       return res.status(400).json({ message: "Please fill in an address to be delivered to.", success: false });
     }
     if (!isValidAddress(req.body.address)) {
-      return res.status(400).json({ message: "Please provide an address, no .$={};", success: false });
+      return res.status(400).json({ message: "Please provide an address, no .$={};. Max 2000 characters!", success: false });
     }
     req.body.address = sanitizeHtml(req.body.address);
     // Find user and update address

@@ -6,10 +6,12 @@ const formSchema = new mongoose.Schema(
     title: {
         type: String,
         required: true,
+        maxlength: 32,
     },
     description: {
         type: String,
         required: true,
+        maxlength: 2000,
     },
     sender: {
         type: String,
