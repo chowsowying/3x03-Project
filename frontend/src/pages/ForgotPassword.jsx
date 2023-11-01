@@ -44,7 +44,7 @@ const ForgotPassword = () => {
         const responseData = await response.json(); // Parse the response JSON
         const resetToken = responseData.resetToken;
         // Give generic message regardless of success or failure, then redirect
-        toast.success("Please enter your OTP to reset your password.");
+        toast.success("Please complete the password reset within 5 minutes.");
         navigate(`/reset-password?resetToken=${resetToken}`);
       } else {
         // Handle the case where the response status is not ok (e.g., 400, 500)

@@ -30,12 +30,12 @@ const ResetPassword = () => {
       // Basic validation
       dispatch(setLoading(true));
       if (otp.length !== 6 || !/^\d+$/.test(otp)) {
-        toast.error("OTP must be 6 digits long and contain only numbers");
+        toast.error("OTP must be 6 digits long and contain only numbers.");
         return;
       }
 
       if (newPassword !== confirmPassword) {
-        toast.error("Passwords do not match");
+        toast.error("Passwords do not match.");
         return;
       }
 
@@ -58,7 +58,7 @@ const ResetPassword = () => {
       }
     } catch (error) {
       dispatch(setLoading(false));
-      toast.error("Failed to reset password.");
+      toast.error("Failed to reset the password. Please try again.");
     }
   };
 
@@ -69,7 +69,7 @@ const ResetPassword = () => {
     }
   }, [resetToken, navigate]);
 
-  // If user is logged in, prevent user from accessing restpassword page
+  // If user is logged in, prevent user from accessing reset password page
   useEffect(() => {
     if (user && user.token) navigate("/");
   }, [user]);
@@ -80,7 +80,7 @@ const ResetPassword = () => {
         <Col sm={9} md={7} lg={5} className="mx-auto">
           <div class="card border-0 shadow rounded-3 my-5 ">
             <div class="card-body p-4 p-sm-5">
-              <h5 class="card-title text-center mb-5 fw-medium fs-5">Enter your TOTP token </h5>
+              <h5 class="card-title text-center mb-5 fw-medium fs-5">Enter your OTP and new password</h5>
               <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="otp">
                   <Form.Control
