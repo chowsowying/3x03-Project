@@ -21,6 +21,11 @@ const ForgotPassword = () => {
     ev.preventDefault();
     try {
       dispatch(setLoading(true));
+      // If email is empty
+      if (!email) {
+        toast.error("Please enter your email address.");
+        return;
+      }
 
       // Validate email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
