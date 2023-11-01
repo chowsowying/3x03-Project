@@ -28,9 +28,15 @@ const userSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    address: String,
+    address: {
+      type: String,
+      maxlength: 2000,
+    },
+    numberTries: {
+      type: Number,
+      default: 0,
+    },
     secret: String,
-    authTag: String,
     resetToken: String,
     resetTokenExpiry: Date,
   },

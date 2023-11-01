@@ -37,8 +37,8 @@ const Home = () => {
   const allowedCharacters = /[A-Za-z0-9\s]/g;
 
   // Sanitize and keep only the allowed characters, and limit to 32 characters
-  let sanitizedKeyword = searchKeyword.match(allowedCharacters);
-  sanitizedKeyword = sanitizedKeyword ? sanitizedKeyword.slice(0, 32).join("") : "";
+  let sanitizedKeyword = searchKeyword.match(allowedCharacters).join("");
+  sanitizedKeyword = sanitizedKeyword.substring(0, 32);
   
   if (sanitizedKeyword === "") {
     // If the search keyword is empty, fetch all products
