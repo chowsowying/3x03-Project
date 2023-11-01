@@ -29,29 +29,30 @@ const Home = () => {
 
   // Function: Search products by keywords
   const searchHandler = (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const searchKeyword = keyword.toLowerCase();
+  const searchKeyword = keyword.toLowerCase();
 
-    // Define a blacklist of special characters
-    const specialCharacterBlacklist = /[$&+,:;=?@#|'<>.^*()%!-]/g;
+  // Define a whitelist of allowed characters (letters, digits, spaces)
+  const allowedCharacters = /[A-Za-z0-9\s]/g;
 
-    //sanitise and remove the special characters
-    const sanitizedKeyword = searchKeyword.replace(specialCharacterBlacklist, "");
-
-    if (sanitizedKeyword === "") {
-      // If the search keyword is empty, fetch all products
-      fetchProducts();
-    } else {
-      // Filter products based on the keywords present in title or description
-      const filteredProducts = products.filter(
-        (product) =>
-          product.title.toLowerCase().includes(sanitizedKeyword) ||
-          product.description.toLowerCase().includes(sanitizedKeyword)
-      );
-      setProducts(filteredProducts);
-    }
-  };
+  // Sanitize and keep only the allowed characters, and limit to 32 characters
+  let sanitizedKeyword = searchKeyword.match(allowedCharacters);
+  sanitizedKeyword = sanitizedKeyword ? sanitizedKeyword.slice(0, 32).join("") : "";
+  
+  if (sanitizedKeyword === "") {
+    // If the search keyword is empty, fetch all products
+    fetchProducts();
+  } else {
+    // Filter products based on the sanitized keyword present in title or description
+    const filteredProducts = products.filter(
+      (product) =>
+        product.title.toLowerCase().includes(sanitizedKeyword) ||
+        product.description.toLowerCase().includes(sanitizedKeyword)
+    );
+    setProducts(filteredProducts);
+  }
+};
 
   // Function: Handle Category change
   const handleCategoryChange = (e) => {
