@@ -1,4 +1,0 @@
-[1698820259093] The following [::1] has attempted to login into a non-existing email: [FakeAccountFail@fake.com] through [POST] request.
-[1698820276807] The following [::1] has attempted to login into an existing email: [Logging@log.com] through [POST] request.
-[1698820280169] The following [::1] has attempted to login into an existing email: [Logging@log.com] through [POST] request.
-[1698820286209] The following [::1] has successfully logged into email: [Logging@log.com] through [POST] request.
