@@ -13,6 +13,7 @@ const ResetPassword = () => {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState("weak");
   // Retrieve resetToken from URL
   const location = useLocation();
   const resetToken = new URLSearchParams(location.search).get("resetToken");
@@ -21,6 +22,27 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+
+  // Function to calculate password strength
+  const calculatePasswordStrength = (input) => {
+    const lengthRegex = /^.{15,64}$/;
+    const specialCharRegex = /[!@#\$%\^&\*\(\)_\+\-=\[\]\{\};:'",<>\./?\\|`~]/;
+    const capitalLetterRegex = /[A-Z]/;
+    const numberRegex = /[0-9]/;
+
+    const isLengthValid = lengthRegex.test(input);
+    const hasSpecialChar = specialCharRegex.test(input);
+    const hasCapitalLetter = capitalLetterRegex.test(input);
+    const hasNumber = numberRegex.test(input);
+
+    if (isLengthValid && hasSpecialChar && hasCapitalLetter && hasNumber) {
+      setPasswordStrength("strong");
+    } else if (isLengthValid && hasSpecialChar && hasNumber) {
+      setPasswordStrength("medium");
+    } else {
+      setPasswordStrength("weak");
+    }
+  };
 
   // Function: Reset password
   const handleSubmit = async (ev) => {
@@ -103,7 +125,10 @@ const ResetPassword = () => {
                   <Form.Control
                     type="password"
                     value={newPassword}
-                    onChange={(ev) => setNewPassword(ev.target.value)}
+                    onChange={(ev) => {
+                      calculatePasswordStrength(ev.target.value);
+                      setNewPassword(ev.target.value);
+                    }}
                     placeholder="New Password"
                     className="mt-4"
                   />
@@ -112,10 +137,14 @@ const ResetPassword = () => {
                   <Form.Control
                     type="password"
                     value={confirmPassword}
-                    onChange={(ev) => setConfirmPassword(ev.target.value)}
+                    onChange={(ev) => {
+                      calculatePasswordStrength(ev.target.value);
+                      setConfirmPassword(ev.target.value);
+                    }}
                     placeholder="Confirm Password"
                     className="mt-4"
                   />
+                  <div className={`mb-3 strength-bar strength-${passwordStrength}`}></div>
                 </Form.Group>
 
                 <Button variant="primary" type="submit" className="w-100 mt-4">
