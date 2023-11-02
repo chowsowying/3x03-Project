@@ -164,7 +164,17 @@ exports.register = async (req, res) => {
     req.body.password = sanitizeHtml(req.body.password);
 
     //Generate a unique salt per user
-    const salt = crypto.randomBytes(16).toString("hex");
+    let uniqueSalt = false;
+    let salt;
+
+    while (!uniqueSalt) {
+      salt = crypto.randomBytes(16).toString("hex");
+      const existingUser = await User.findOne({ salt: salt });
+
+      if (!existingUser) {
+        uniqueSalt = true;
+      }
+    }
 
     //Pre-hash the password if it's longer than the block size
     let preHashedPassword = req.body.password;

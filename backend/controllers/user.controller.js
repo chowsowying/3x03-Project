@@ -156,7 +156,17 @@ exports.updateProfile = async (req, res) => {
     req.body.password = sanitizeHtml(req.body.password);
 
     //Generate a unique salt per user
-    const newSalt = crypto.randomBytes(16).toString("hex");
+    let uniqueSalt = false;
+    let newSalt;
+
+    while (!uniqueSalt) {
+      newSalt = crypto.randomBytes(16).toString("hex");
+      const existingUser = await User.findOne({ salt: newSalt });
+
+      if (!existingUser) {
+        uniqueSalt = true;
+      }
+    }
 
     //Pre-hash the new password if it's longer than the block size of 64
     let preHashedPassword = password;
