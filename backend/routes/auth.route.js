@@ -12,13 +12,13 @@ const { register, login, currentUser, forgotPassword, resetPassword } = require(
 // Eg. router.[get|post|put|delete]("/path", isAuth, isAdmin, [controller function])
 
 // Register user
-router.post("/register", register);
+router.post("/register", rateLimit, register);
 // Login user
 router.post("/login", rateLimit, login);
 // Forgot password
 router.post("/forgot-password", forgotPassword);
 // Reset password
-router.post("/reset-password", resetPassword);
+router.post("/reset-password", rateLimit, resetPassword);
 // Get current user info
 router.post("/current-user", isAuth, isUser, currentUser);
 // Get current admin info

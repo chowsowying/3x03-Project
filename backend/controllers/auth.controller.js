@@ -419,14 +419,6 @@ exports.resetPassword = async (req, res) => {
       return res.status(400).json({ message: "Please provide a valid OTP.", success: false });
     }
 
-    // // Check if the password meets the strength criteria
-    // if (!schema.validate(newPassword)) {
-    //   return res.status(400).json({
-    //     message:
-    //       "Password does not meet the required strength criteria. Password should contains 15-64 characters, at least 1 special character, 1 capital letter and 1 number.",
-    //     success: false,
-    //   });
-    // }
     req.body.newpassword = sanitizeHtml(req.body.newpassword);
     req.body.confirmpassword = sanitizeHtml(req.body.confirmpassword);
 
