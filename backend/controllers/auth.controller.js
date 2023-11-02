@@ -112,7 +112,7 @@ const verifyRecaptcha = async (recaptchaResponse) => {
 exports.register = async (req, res) => {
   try {
     const { name, email, password, recaptchaResponse } = req.body;
-
+    const clientIP = req.headers['x-real-ip'];
     // Check if the name is missing
     if (!name) {
       return res.status(400).json({ message: "Please fill up your name.", success: false });
@@ -479,7 +479,7 @@ exports.resetPassword = async (req, res) => {
       });
     }
   } catch {
-    resetPasswordLogger.info(`[${Date.now()}] The following [${clientIP}] has attempted to reset password but failed as the password does not exist through [${req.method}] request.`);
+    resetPasswordLogger.info(`[${Date.now()}] The following [${clientIP}] has attempted to reset password but failed as the email does not exist through [${req.method}] request.`);
     res.status(500).json({ message: "Failed to reset the password.", success: false });
   }
 };
