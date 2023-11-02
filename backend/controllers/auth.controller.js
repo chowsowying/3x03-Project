@@ -8,7 +8,7 @@ const sanitizeHtml = require("sanitize-html");
 require("dotenv").config();
 const { createLogger, format, transports } = require('winston');
 
-const logger = createLogger({
+const loginAttemptLogger = createLogger({
   level: 'info',
   format: format.combine(
     format.timestamp(),
@@ -31,6 +31,19 @@ const resetPasswordLogger = createLogger({
   ),
   transports: [
     new transports.File({ filename: 'reset_password_activity.log' }),
+  ],
+});
+
+const registerAccountLogger = createLogger({
+  level: 'info',
+  format: format.combine(
+    format.timestamp(),
+    format.printf(({ message }) => {
+      return `${message}`;
+    })
+  ),
+  transports: [
+    new transports.File({ filename: 'register_account_activity.log' }),
   ],
 });
 
@@ -123,25 +136,27 @@ exports.register = async (req, res) => {
     if (!password) {
       return res.status(400).json({ message: "Please fill in your password.", success: false });
     }
-
-    //Check if user already exists
-    const user = await User.findOne({ email: req.body.email });
-    if (user) {
-      return res.status(400).json({ message: "This email already exists.", success: false });
-    }
     
     // Check if the password meets the strength criteria
-    if (!schema.validate(req.body.password)) {
+    if (!schema.validate(password)) {
       return res.status(400).json({
         message:
           "Password does not meet the required strength criteria. Password should contains 15-64 characters, at least 1 special character, 1 capital letter and 1 number.",
         success: false,
       });
     }
+
     // Verify reCAPTCHA
     const isRecaptchaValid = await verifyRecaptcha(recaptchaResponse);
     if (!isRecaptchaValid) {
       return res.status(400).json({ message: "reCAPTCHA verification failed.", success: false });
+    }
+
+    //Check if user already exists
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      registerAccountLogger.info(`[${Date.now()}] The following [${clientIP}] has failed to register the account for: [${req.body.email}] as it already exist through [${req.method}] request.`);
+      return res.status(400).json({ message: "This email already exists.", success: false });
     }
 
     req.body.name = sanitizeHtml(req.body.name);
@@ -174,9 +189,10 @@ exports.register = async (req, res) => {
       secret: secret,
       numberTries: 0,
     });
-
+    registerAccountLogger.info(`[${Date.now()}] The following [${clientIP}] has successfully registered an account for: [${req.body.email}] through [${req.method}] request.`);
     res.status(201).json({ message: "User registered successfully. Scan the QR code with a 2FA app to enable two-factor authentication.", success: true, qrCode: otpauth_url });
   } catch (error) {
+    registerAccountLogger.info(`[${Date.now()}] The following [${clientIP}] has failed to register the account for: [${req.body.email}] through [${req.method}] request.`);
     res.status(500).json({ message: "Failed to register user.", success: false });
   }
 };
@@ -214,7 +230,7 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
-      logger.info(`[${Date.now()}] The following [${clientIP}] has attempted to login into a non-existing email: [${req.body.email}] through [${req.method}] request.`);
+      loginAttemptLogger.info(`[${Date.now()}] The following [${clientIP}] has attempted to login into a non-existing email: [${req.body.email}] but failed through [${req.method}] request.`);
       return res
         .status(400)
         .json({ message: "Please Enter a valid email/password.", success: false });
@@ -252,7 +268,7 @@ exports.login = async (req, res) => {
         });
       }
 
-      logger.info(`[${Date.now()}] The following [${clientIP}] has attempted to login into an existing email: [${req.body.email}] through [${req.method}] request.`);
+      loginAttemptLogger.info(`[${Date.now()}] The following [${clientIP}] has attempted to login into an existing email: [${req.body.email}] but failed through [${req.method}] request.`);
       return res
         .status(400)
         .json({ message: "Please Enter a valid email/password.", success: false });
@@ -263,7 +279,7 @@ exports.login = async (req, res) => {
     await user.save();
 
     
-    logger.info(`[${Date.now()}] The following [${clientIP}] has successfully logged into email: [${req.body.email}] through [${req.method}] request.`);
+    loginAttemptLogger.info(`[${Date.now()}] The following [${clientIP}] has successfully logged into email: [${req.body.email}] through [${req.method}] request.`);
 
     //Create Token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
@@ -294,7 +310,7 @@ exports.login = async (req, res) => {
             success: false,
           });
         }
-      logger.info(`[${Date.now()}] The following [${clientIP}] has attempted to login into an existing email: [${req.body.email}] through [${req.method}] request.`);
+      loginAttemptLogger.info(`[${Date.now()}] The following [${clientIP}] has attempted to login into an existing email: [${req.body.email}] but failed through [${req.method}] request.`);
       // If the OTP is invalid, return a generic error message
       return res.status(400).json({
         message: "Failed to login user.",
@@ -302,6 +318,7 @@ exports.login = async (req, res) => {
       });
     }
   } catch (error) {
+    loginAttemptLogger.info(`[${Date.now()}] The following [${clientIP}] has failed login through [${req.method}] request.`);
     res.status(500).json({ message: "Failed to login user.", success: false });
   }
 };
