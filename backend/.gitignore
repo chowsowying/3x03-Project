@@ -1,3 +1,4 @@
 node_modules
 .env
 login_activity.log
+reset_password_activity.log
