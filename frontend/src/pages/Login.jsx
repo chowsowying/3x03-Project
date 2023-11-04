@@ -26,12 +26,14 @@ const Login = () => {
       // If any field is empty
       if (!email || !password || !otp) {
         toast.error("All fields are required.");
+        dispatch(setLoading(false));
         return;
       }
 
       // If OTP is not 6 digits long or contains non-numbers
       if (otp.length !== 6 || !/^\d+$/.test(otp)) {
         toast.error("OTP must be 6 digits long and contain only numbers.");
+        dispatch(setLoading(false));
         return;
       }
 

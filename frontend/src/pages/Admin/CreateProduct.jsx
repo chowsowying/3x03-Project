@@ -105,6 +105,7 @@ const CreateProduct = () => {
         if (filename.length > maxFilenameLength) {
           console.error("Filename is too long");
           toast.error("Filename is too long");
+          dispatch(setLoading(false));
           continue;
         }
 
@@ -112,18 +113,21 @@ const CreateProduct = () => {
         if (file.name.split(".").length > 2) {
           console.error("File with multiple extensions not allowed");
           toast.error("File with multiple extensions not allowed");
+          dispatch(setLoading(false));
           continue;
         }
         //Extension not .png, .jpg or .jpeg
         if (!allowedExtensions.includes(fileExtension)) {
           console.error("Invalid file extension, only accept png, jpg, jpeg.");
           toast.error("Invalid file extension, only accept png, jpg, jpeg.");
+          dispatch(setLoading(false));
           continue;
         }
         //File size must be below 200kb
         if (file.size > maxFileSize) {
           console.error("File size too large, must be 200kb or less.");
           toast.error("File size too large, must be 200kb or less.");
+          dispatch(setLoading(false));
           continue;
         }
 

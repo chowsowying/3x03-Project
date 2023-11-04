@@ -69,7 +69,7 @@ const Register = () => {
         setQrCodeData(response.data.qrCode);
         openModal(); // Open the modal when QR code data is available
       } else {
-        toast.success(response.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       dispatch(setLoading(false));

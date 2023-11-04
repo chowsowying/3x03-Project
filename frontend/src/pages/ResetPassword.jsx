@@ -53,18 +53,21 @@ const ResetPassword = () => {
       // If any field is empty
       if (!otp || !newPassword || !confirmPassword) {
         toast.error("All fields are required.");
+        dispatch(setLoading(false));
         return;
       }
 
       // If OTP is not 6 digits long or contains non-numbers
       if (otp.length !== 6 || !/^\d+$/.test(otp)) {
         toast.error("OTP must be 6 digits long and contain only numbers.");
+        dispatch(setLoading(false));
         return;
       }
 
       // If password doesn't match confirm password
       if (newPassword !== confirmPassword) {
         toast.error("Passwords do not match.");
+        dispatch(setLoading(false));
         return;
       }
 

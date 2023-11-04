@@ -24,6 +24,7 @@ const ForgotPassword = () => {
       // If email is empty
       if (!email) {
         toast.error("Please enter your email address.");
+        dispatch(setLoading(false));
         return;
       }
 
@@ -31,6 +32,7 @@ const ForgotPassword = () => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
       if (!emailRegex.test(email)) {
         toast.error("Please enter a valid email address.");
+        dispatch(setLoading(false));
         return;
       }
 
