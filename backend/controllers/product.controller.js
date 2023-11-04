@@ -41,7 +41,6 @@ function isValidDescriptionCheck(data) {
 //Input Validation function check for price
 function isValidPriceCheck(data) {
   if (
-    data.price.trim() === "" ||
     data.price <= 0 ||
     !priceRegex.test(data.price.toString()) ||
     data.price >= 100000
@@ -77,7 +76,7 @@ exports.createProduct = async (req, res) => {
 
     //Get title from request body and slugify it
     req.body.slug = slugify(req.body.title);
-    
+
     // Create new product
     const newProduct = await new Product(req.body).save();
     // Send response
