@@ -76,29 +76,42 @@ const UpdateProduct = () => {
     const maxFileSize = 10 * 1024 * 1024; // 200kb
     let files = ev.target.files;
     let allUploadedFiles = values.images;
+    const maxFilenameLength = 30;
     // Resize Images
     if (files) {
       dispatch(setLoading(true));
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const fileExtension = file.name.split(".").pop().toLowerCase();
+        const filename = file.name.replace(/\.[^/.]+$/, "");
+
+        //File name length to not exceed 30 characters
+        if (filename.length > maxFilenameLength) {
+          console.error("Filename is too long");
+          toast.error("Filename is too long");
+          dispatch(setLoading(false));
+          continue;
+        }
 
         //Does not allow multiple extension
         if (file.name.split(".").length > 2) {
           console.error("File with multiple extensions not allowed.");
           toast.error("File with multiple extensions not allowed.");
+          dispatch(setLoading(false));
           continue;
         }
         //Extension not .png, .jpg or .jpeg
         if (!allowedExtensions.includes(fileExtension)) {
           console.error("Invalid file extension, only accept png, jpg, jpeg.");
           toast.error("Invalid file extension, only accept png, jpg, jpeg.");
+          dispatch(setLoading(false));
           continue;
         }
         //File size must be below 200kb
         if (file.size > maxFileSize) {
           console.error("File size too large, must be 200kb or less.");
           toast.error("File size too large, must be 200kb or less.");
+          dispatch(setLoading(false));
           continue;
         }
 
