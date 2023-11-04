@@ -46,7 +46,7 @@ const loginAttemptLogger = createLogger({
     })
   ),
   transports: [
-    new transports.File({ filename: 'login_activity.log' }),
+    new transports.File({ filename: 'logs/login_activity.log' }),
   ],
 });
 
@@ -59,7 +59,7 @@ const resetPasswordLogger = createLogger({
     })
   ),
   transports: [
-    new transports.File({ filename: 'reset_password_activity.log' }),
+    new transports.File({ filename: 'logs/reset_password_activity.log' }),
   ],
 });
 
@@ -72,7 +72,7 @@ const registerAccountLogger = createLogger({
     })
   ),
   transports: [
-    new transports.File({ filename: 'register_account_activity.log' }),
+    new transports.File({ filename: 'logs/register_account_activity.log' }),
   ],
 });
 
