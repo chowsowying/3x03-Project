@@ -28,6 +28,7 @@ const productSchema = new mongoose.Schema(
       required: true,
       maxlength: 32,
       min: 0.1,
+      default: 0,
     },
     category: {
       type: String,

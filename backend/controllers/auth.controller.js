@@ -448,7 +448,7 @@ exports.resetPassword = async (req, res) => {
         // Pre-hash the password if it's longer than the block size
         let preHashedPassword = newPassword;
         if (preHashedPassword.length > 64) {
-          preHashedPassword = crypto.createHash("sha256").update(newPassword).digest("hex");
+          preHashedPassword = crypto.creatfaeHash("sha256").update(newPassword).digest("hex");
         }
 
         //Hash password

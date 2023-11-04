@@ -38,13 +38,14 @@ function isValidDescriptionCheck(data) {
   }
   return true;
 }
-
 //Input Validation function check for price
 function isValidPriceCheck(data) {
-  if (data.price.trim() === "" ||
-  data.price <= 0 ||
-  !priceRegex.test(data.price.toString()) ||
-  price >= 100000) {
+  if (
+    data.price.trim() === "" ||
+    data.price <= 0 ||
+    !priceRegex.test(data.price.toString()) ||
+    data.price >= 100000
+  ) {
     return false;
   }
   return true;
@@ -69,12 +70,14 @@ exports.createProduct = async (req, res) => {
         success: false,
       });
     }
+
     //sanitise the input data
     req.body.title = sanitizeHtml(req.body.title);
     req.body.description = sanitizeHtml(req.body.description);
 
     //Get title from request body and slugify it
     req.body.slug = slugify(req.body.title);
+    
     // Create new product
     const newProduct = await new Product(req.body).save();
     // Send response
